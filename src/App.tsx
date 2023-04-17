@@ -1,17 +1,21 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 import Login from "./components/sign-in/login";
+import Registration from "./components/Registration";
+
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
   return (
     <div className="App">
-      <BrowserRouter>
+      <Router>
         <Routes>
           <Route element={<Login />} path="/" />
+          <Route element={<Registration />} path="/registration" />
         </Routes>
-      </BrowserRouter>
+      </Router>
     </div>
   );
 }
