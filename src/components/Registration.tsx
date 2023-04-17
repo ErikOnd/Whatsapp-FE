@@ -2,8 +2,28 @@ import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import "../css/reg.css";
 import GoogleButton from "react-google-button";
 import regImage from "../assets/Registration_image.png";
+import { useState } from "react";
 
 const Registration = () => {
+  const [user, setUser] = useState({
+    name: "",
+    email: "",
+    password: "",
+    image: "",
+  });
+  const [fileForUserPicture, setFileForUserPicture] = useState<File | null>(
+    null
+  );
+  const uploadUserPicture = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+
+    if (files && files.length > 0) {
+      setFileForUserPicture(files[0]);
+    } else {
+      setFileForUserPicture(null);
+    }
+  };
+
   return (
     <div style={{ backgroundColor: "#D3D3D3" }} className="reg">
       <Container fluid>
@@ -17,7 +37,12 @@ const Registration = () => {
             <div style={{ backgroundColor: "#D3D3D3" }} className="mt-5 ">
               <span className="text-right  acc ">
                 have an account?{" "}
-                <span style={{ color: "green" }}>Sign in!</span>
+                <a
+                  href="http://localhost:3000/login"
+                  style={{ color: "green" }}
+                >
+                  Sign in!
+                </a>
               </span>
               <div>
                 <h4 className="text-center mt-5 text-bold start">
@@ -51,6 +76,13 @@ const Registration = () => {
                             type="text"
                             placeholder="Your Name *"
                             className="form-control"
+                            value={user.name}
+                            onChange={(e) => {
+                              setUser({
+                                ...user,
+                                name: e.target.value,
+                              });
+                            }}
                           />
                         </Form.Group>
 
@@ -59,6 +91,13 @@ const Registration = () => {
                             type="text"
                             placeholder="Email *"
                             className="form-control"
+                            value={user.email}
+                            onChange={(e) => {
+                              setUser({
+                                ...user,
+                                email: e.target.value,
+                              });
+                            }}
                           />
                         </Form.Group>
                       </Col>
@@ -68,6 +107,13 @@ const Registration = () => {
                             type="text"
                             placeholder="Your Password *"
                             className="form-control"
+                            value={user.password}
+                            onChange={(e) => {
+                              setUser({
+                                ...user,
+                                password: e.target.value,
+                              });
+                            }}
                           />
                         </Form.Group>
 
@@ -85,11 +131,12 @@ const Registration = () => {
                         lang="en"
                         custom
                         style={{ borderRadius: "20px" }}
+                        onChange={uploadUserPicture}
                       />
                     </Row>
 
                     <Button
-                      variant="primary"
+                      variant="success"
                       type="submit"
                       className="btnSubmit mt-5 "
                     >
