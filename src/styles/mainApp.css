@@ -1,0 +1,66 @@
+.main-header {
+  background-color: rgb(240 242 245);
+  height: 60px;
+}
+
+.header-left {
+  max-width: calc(30% + 1px);
+  min-width: 281px;
+  border-right: 1px solid rgb(209 215 219);
+}
+
+.user-col {
+  background-color: white;
+  max-width: 30vw;
+  min-width: 280px;
+  height: calc(100vh - 60px);
+}
+.chat-col {
+  background-image: url("/assets/whatsApp.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  max-width: 70vw;
+  height: calc(100vh - 60px);
+}
+.search-newChat {
+  height: 50px;
+}
+
+.header-seperator {
+  color: rgb(84 101 111);
+  font-weight: 100;
+  font-size: 25px;
+}
+
+.search-input {
+  background-color: rgb(240 242 245);
+  border: 1px solid rgb(240 242 245);
+}
+
+img {
+  border-radius: 50%;
+  height: 45px;
+  width: 45px;
+  object-fit: cover;
+}
+
+h6 {
+  display: inline;
+}
+
+.chat-row {
+  background-color: aqua;
+  height: 20px;
+}
+
+.chat-window {
+  height: 70px;
+  max-width: 70vw;
+  position: fixed;
+  bottom: 0;
+  background-color: rgb(240 242 245);
+}
+
+.text-input {
+  border: 1px solid rgb(240 242 245);
+}
