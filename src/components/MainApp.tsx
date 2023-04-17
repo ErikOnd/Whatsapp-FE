@@ -13,6 +13,7 @@ import {
   Paperclip,
   Mic,
 } from "react-bootstrap-icons";
+import "../styles/mainApp.css";
 
 const MainApp = () => {
   const contacts = [
@@ -40,7 +41,7 @@ const MainApp = () => {
           <Image
             src="https://servnettech.com/wp-content/uploads/2022/08/c293b66e546446e8a0fa6f258c28b219.jpg"
             alt="user-img"
-            className="mr-4"
+            className="mr-4 main-img"
           ></Image>
           <PeopleFill
             color="rgb(84 101 111)"
@@ -64,7 +65,7 @@ const MainApp = () => {
             <Image
               src="https://servnettech.com/wp-content/uploads/2022/08/c293b66e546446e8a0fa6f258c28b219.jpg"
               alt="user-img"
-              className="mr-4  ml-3 align-self-start"
+              className="mr-4  ml-3 align-self-start main-img"
             ></Image>
             <h6 className="mb-0">John Doe</h6>
           </Col>

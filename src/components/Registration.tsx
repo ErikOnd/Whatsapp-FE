@@ -1,6 +1,6 @@
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import "../css/reg.css";
-import GoogleButton from "react-google-button";
+//import GoogleButton from "react-google-button";
 import regImage from "../assets/Registration_image.png";
 import { useState } from "react";
 
@@ -52,7 +52,7 @@ const Registration = () => {
               <p className="text-muted text-center">Getting started is easy</p>
               <div className="d-flex justify-content-center align-items-center ml-auto">
                 {/* <div className=" d-flex " style={{ gap: "10px" }}> */}
-                <GoogleButton type="light" />
+                {/* <GoogleButton type="light" /> */}
                 {/* <Button>Facebook</Button> */}
                 {/* </div> */}
               </div>
