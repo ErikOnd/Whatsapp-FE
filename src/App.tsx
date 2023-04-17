@@ -1,13 +1,24 @@
+import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./styles/mainApp.css";
+
+import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-import MainApp from "./components/MainApp";
+
+import Login from "./components/sign-in/login";
+import Registration from "./components/Registration";
+
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
   return (
     <div className="App">
+      <Router>
+        <Routes>
+          <Route element={<Login />} path="/" />
+          <Route element={<Registration />} path="/registration" />
+        </Routes>
+      </Router>
+
       <Router>
         <Routes>
           <Route path="/" element={<MainApp />} />
