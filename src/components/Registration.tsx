@@ -37,7 +37,6 @@ const Registration = () => {
 
     newUserId = newUser.id._id;
     if (fileForUserPicture) {
-      // imageUpload(newuserid)
     }
   };
 
