@@ -158,14 +158,21 @@ const Registration = () => {
                           />
                         </Form.Group>
                       </Col>
-                      <Form.File
+                      {/* <Form.File
                         id="custom-file-translate-scss"
                         label="choose a picture"
                         lang="en"
                         custom
                         style={{ borderRadius: "20px", marginInline: "15px" }}
                         onChange={uploadUserPicture}
-                      />
+                      />{" "} */}
+                      <Form.Group className="mb-3">
+                        <Form.Control
+                          className="inputs"
+                          type="file"
+                          onChange={uploadUserPicture}
+                        />
+                      </Form.Group>
                     </Row>
 
                     <Button
