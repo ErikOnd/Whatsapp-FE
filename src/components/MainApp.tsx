@@ -16,6 +16,7 @@ import {
 import "../styles/mainApp.css";
 
 const MainApp = () => {
+  /* Example for Contacts, getting data from fetch request later */
   const contacts = [
     {
       name: "JohnDoe",
