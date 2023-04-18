@@ -8,6 +8,8 @@ import { Link } from "react-router-dom";
 import { postUserAction } from "../actions";
 import { useAppDispatch } from "../hooks/hooks";
 
+let newUserId: string;
+
 const Registration = () => {
   const dispatch = useAppDispatch();
   const [user, setUser] = useState({
@@ -32,7 +34,11 @@ const Registration = () => {
   const handleSubmit = async (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     e.preventDefault();
     let newUser = await dispatch(postUserAction(user));
-    console.log(newUser);
+
+    newUserId = newUser.id._id;
+    if (fileForUserPicture) {
+      // imageUpload(newuserid)
+    }
   };
 
   return (
