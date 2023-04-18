@@ -26,6 +26,10 @@ const Registration = () => {
     }
   };
 
+  const handleSubmit = async (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    e.preventDefault();
+  };
+
   return (
     <div className="reg">
       <Container fluid>
@@ -151,6 +155,7 @@ const Registration = () => {
                       variant="success"
                       type="submit"
                       className="btnSubmit mt-5 "
+                      onClick={handleSubmit}
                     >
                       Create Account
                     </Button>
