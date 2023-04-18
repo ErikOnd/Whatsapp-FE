@@ -5,13 +5,16 @@ import facebookBtn from "../images/facebook-btn.svg";
 import regImage from "../assets/Registration_image.png";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { postUserAction } from "../actions";
+import { useAppDispatch } from "../hooks/hooks";
 
 const Registration = () => {
+  const dispatch = useAppDispatch();
   const [user, setUser] = useState({
-    name: "",
+    username: "",
     email: "",
     password: "",
-    image: "",
+    avatar: "",
   });
   const [fileForUserPicture, setFileForUserPicture] = useState<File | null>(
     null
@@ -28,6 +31,13 @@ const Registration = () => {
 
   const handleSubmit = async (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     e.preventDefault();
+    let newUser = await dispatch(postUserAction(user));
+    console.log(newUser);
+
+    // newexpID = newexp._id;
+    // if (file) {
+    //   NewExpImageUpload(fileForNewExp, newexpID, userID);
+    // }
   };
 
   return (
@@ -92,11 +102,11 @@ const Registration = () => {
                             type="text"
                             placeholder="Your Name *"
                             className="form-control"
-                            value={user.name}
+                            value={user.username}
                             onChange={(e) => {
                               setUser({
                                 ...user,
-                                name: e.target.value,
+                                username: e.target.value,
                               });
                             }}
                           />
