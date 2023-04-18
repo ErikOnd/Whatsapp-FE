@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Row, Col, Container, Form, Image } from "react-bootstrap";
 import {
   Filter,
@@ -18,8 +18,8 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 
 const MainApp = () => {
   const [searchParams] = useSearchParams();
-
   const navigate = useNavigate();
+  const apiUrl = process.env.REACT_APP_BE_URL;
   useEffect(() => {
     if (!localStorage.getItem("accessToken")) navigate("/");
     if (searchParams.get("accessToken") as string) {
@@ -30,23 +30,55 @@ const MainApp = () => {
       navigate("/home");
     }
   }, [navigate, searchParams]);
-  /* Example for Contacts, getting data from fetch request later */
+
+  const [userData, setUserData] = useState();
+
+  const getUser = async () => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      const res = await fetch(`${apiUrl}/users/me`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      const userData = await res.json();
+      if (res.ok) {
+        setUserData(userData);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getContacts = async () => {
+    // How are we getting all the contacts from one user ???
+  };
+  const editUser = async () => {};
+
+  useEffect(() => {
+    getUser();
+    getContacts();
+  }, []);
 
   const contacts = [
     {
       name: "JohnDoe",
       avatar:
         "https://servnettech.com/wp-content/uploads/2022/08/c293b66e546446e8a0fa6f258c28b219.jpg",
+      email: "JohnDoe.de",
     },
     {
       name: "JaneDoe",
       avatar:
         "https://servnettech.com/wp-content/uploads/2022/08/c293b66e546446e8a0fa6f258c28b219.jpg",
+      email: "JaneDoe.de",
     },
+
     {
       name: "BobSmith",
       avatar:
         "https://servnettech.com/wp-content/uploads/2022/08/c293b66e546446e8a0fa6f258c28b219.jpg",
+      email: "BobSmith.de",
     },
   ];
 
@@ -127,7 +159,7 @@ const MainApp = () => {
             ></Filter>
           </Row>
           {contacts.map((contact) => (
-            <Row className="mb-3">
+            <Row className="mb-3" key={contact.email}>
               <Image src={contact.avatar} className="main-img ml-2"></Image>
               <Col className="contact-info-section">
                 <Row className="justify-content-between">
