@@ -5,7 +5,7 @@ import facebookBtn from "../images/facebook-btn.svg";
 import regImage from "../assets/Registration_image.png";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { postUserAction } from "../actions";
+import { postUserAction, postUserImageAction } from "../actions";
 import { useAppDispatch } from "../hooks/hooks";
 
 let newUserId: string;
@@ -37,6 +37,7 @@ const Registration = () => {
 
     newUserId = newUser.id._id;
     if (fileForUserPicture) {
+      await dispatch(postUserImageAction(newUserId, fileForUserPicture));
     }
   };
 
