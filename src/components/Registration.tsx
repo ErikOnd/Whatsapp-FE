@@ -147,14 +147,15 @@ const Registration = () => {
                         onChange={uploadUserPicture}
                       />
                     </Row>
-
-                    <Button
-                      variant="success"
-                      type="submit"
-                      className="btnSubmit mt-5 "
-                    >
-                      Create Account
-                    </Button>
+                    <div className="d-flex justify-content-center align-items-center">
+                      <Button
+                        variant="success"
+                        type="submit"
+                        className="btnSubmit mt-5 "
+                      >
+                        Create Account
+                      </Button>
+                    </div>
                   </div>
                 </Form>
               </div>
