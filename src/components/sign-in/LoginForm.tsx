@@ -3,39 +3,19 @@ import { Button, Form } from "react-bootstrap";
 // import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { toast } from "react-toastify";
-import { IUser } from "../../interfaces/IUser";
+import { useAppDispatch } from "../../hooks/hooks";
+import { loginUser } from "../../actions";
 
 const LoginForm = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
   const handleSubmit = async (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     e.preventDefault();
-    try {
-      const apiUrl = process.env.REACT_APP_BE_URL;
-      const response = await fetch(`${apiUrl}/users/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (response.ok) {
-        toast("Login successfull! 💪", { autoClose: 1000 });
-        const data = await response.json();
-        console.log("logindata", data);
-        // console.log("accessToken", data.accessToken);
-        localStorage.setItem("accessToken", data.accessToken);
-        // localStorage.setItem("refreshToken", data.refreshToken);
-        navigate("/home");
-        // window.location.href = "/home";
-      } else {
-        console.log("Login failed");
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    dispatch(loginUser({ email, password }));
+    navigate("/home");
   };
 
   return (
