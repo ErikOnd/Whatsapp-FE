@@ -1,4 +1,6 @@
 import { Dispatch } from "redux";
+import { createAsyncThunk } from '@reduxjs/toolkit';
+export const SET_USER = 'SET_USER'
 
 export const postUserAction = (user: {
   username: string;
@@ -27,3 +29,21 @@ export const postUserAction = (user: {
     }
   };
 };
+
+export const loginUser = createAsyncThunk(
+  "login",
+  async ({ email, password }: { email: string; password: string }) => {
+    const response = await fetch(`${process.env.REACT_APP_BE_URL}/users/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+    if (!response.ok) {
+      const error = await response.text();
+      throw new Error(error);
+    }
+    const data = await response.json();
+    localStorage.setItem("accessToken", data.accessToken);
+    return data.user;
+  }
+);
