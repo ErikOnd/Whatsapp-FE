@@ -51,11 +51,17 @@ const Registration = () => {
               </div>
               <p>Getting started is easy</p>
               <div className="d-flex justify-content-center">
-                <img
-                  src={googleBtn}
-                  alt="google button"
-                  className="mr-3 cursor-pointer"
-                />
+                <a
+                  onClick={(e) => e.stopPropagation()}
+                  href={`${process.env.REACT_APP_BE_URL}/users/googleLogin`}
+                >
+                  {" "}
+                  <img
+                    src={googleBtn}
+                    alt="google button"
+                    className="mr-3 cursor-pointer"
+                  />
+                </a>
                 <img
                   src={facebookBtn}
                   alt="facebook button"
