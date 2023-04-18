@@ -18,25 +18,25 @@ import "../styles/mainApp.css";
 const MainApp = () => {
   const contacts = [
     {
-      username: "JohnDoe",
-      profileImage:
+      name: "JohnDoe",
+      avatar:
         "https://servnettech.com/wp-content/uploads/2022/08/c293b66e546446e8a0fa6f258c28b219.jpg",
     },
     {
-      username: "JaneDoe",
-      profileImage:
+      name: "JaneDoe",
+      avatar:
         "https://servnettech.com/wp-content/uploads/2022/08/c293b66e546446e8a0fa6f258c28b219.jpg",
     },
     {
-      username: "BobSmith",
-      profileImage:
+      name: "BobSmith",
+      avatar:
         "https://servnettech.com/wp-content/uploads/2022/08/c293b66e546446e8a0fa6f258c28b219.jpg",
     },
   ];
 
   return (
     <Container fluid>
-      <Row className="main-header">
+      <Row className="main-header no-wrap">
         <Col className="d-flex align-items-center justify-content-end header-left">
           <Image
             src="https://servnettech.com/wp-content/uploads/2022/08/c293b66e546446e8a0fa6f258c28b219.jpg"
@@ -92,7 +92,7 @@ const MainApp = () => {
       </Row>
       <Row>
         <Col className="user-col">
-          <Row className="search-newChat align-items-center justify-content-between">
+          <Row className="search-newChat align-items-center justify-content-between mb-2">
             <Col className="pl-2">
               <Form>
                 <Form.Group controlId="formSearch" className="m-0">
@@ -110,11 +110,20 @@ const MainApp = () => {
               className="mr-3"
             ></Filter>
           </Row>
-          <Row>Test</Row>
-          <Row>Test</Row>
-          <Row>Test</Row>
-          <Row>Test</Row>
-          <Row>Test</Row>
+          {contacts.map((contact) => (
+            <Row className="mb-3">
+              <Image src={contact.avatar} className="main-img ml-2"></Image>
+              <Col className="contact-info-section">
+                <Row className="justify-content-between">
+                  <Col>{contact.name}</Col>
+                  <Col className="text-right secondary">Friday</Col>
+                </Row>
+                <Row>
+                  <Col className="secondary">Last Message</Col>
+                </Row>
+              </Col>
+            </Row>
+          ))}
         </Col>
         <Col className="chat-col p-0">
           <Col className="chat-window ml-auto d-flex align-items-center justify-content-between">

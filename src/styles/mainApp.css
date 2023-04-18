@@ -1,3 +1,7 @@
+:root {
+  --secondary-color: rgb(134, 151, 160);
+}
+
 .main-header {
   background-color: rgb(240 242 245);
   height: 60px;
@@ -24,6 +28,7 @@
 }
 .search-newChat {
   height: 50px;
+  border-bottom: 1px solid rgb(233 237 239);
 }
 
 .header-seperator {
@@ -63,4 +68,15 @@ h6 {
 
 .text-input {
   border: 1px solid rgb(240 242 245);
+}
+
+.contact-info-section {
+  border-bottom: 1px solid rgb(233 237 239);
+  margin-right: 20px;
+  padding-bottom: 10px;
+}
+
+.secondary {
+  color: var(--secondary-color);
+  font-size: 0.8rem;
 }
