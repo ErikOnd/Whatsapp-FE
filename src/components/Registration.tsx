@@ -1,6 +1,7 @@
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import "../css/reg.css";
-import GoogleButton from "react-google-button";
+import googleBtn from "../images/google-btn.svg";
+import facebookBtn from "../images/facebook-btn.svg";
 import regImage from "../assets/Registration_image.png";
 import { useState } from "react";
 
@@ -24,20 +25,24 @@ const Registration = () => {
     }
   };
 
-  const googleAction = async (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    e.preventDefault();
-    try {
-      let response = await fetch("http://localhost:3001/users/googleLogin");
+  // const googleLoginAction = async (
+  //   e: React.MouseEvent<HTMLElement, MouseEvent>
+  // ) => {
+  //   e.preventDefault();
+  //   try {
+  //     let response = await fetch(
+  //       `${process.env.REACT_APP_BE_URL}/users/googleLogin`
+  //     );
 
-      if (response.ok) {
-        console.log("google login successful");
-      } else {
-        console.log("Error");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //     if (response.ok) {
+  //       console.log("google login successful");
+  //     } else {
+  //       console.log("Error");
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
   return (
     <div style={{ backgroundColor: "#D3D3D3" }} className="reg">
       <Container fluid>
@@ -62,8 +67,25 @@ const Registration = () => {
               </div>
               <p className="text-muted text-center">Getting started is easy</p>
               <div className="d-flex justify-content-center align-items-center ml-auto">
-                {/* <div className=" d-flex " style={{ gap: "10px" }}> */}
-                <GoogleButton type="light" onClick={googleAction} />
+                <div className="d-flex justify-content-center">
+                  <a
+                    onClick={(e) => e.stopPropagation()}
+                    href={`${process.env.REACT_APP_BE_URL}/users/googleLogin`}
+                  >
+                    {" "}
+                    <img
+                      src={googleBtn}
+                      alt="google button"
+                      className="mr-3 cursor-pointer"
+                    />
+                  </a>
+
+                  <img
+                    src={facebookBtn}
+                    alt="facebook button"
+                    className="cursor-pointer"
+                  />
+                </div>
                 {/* <Button>Facebook</Button> */}
                 {/* </div> */}
               </div>

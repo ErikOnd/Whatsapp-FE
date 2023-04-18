@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Row, Col, Container, Form, Image } from "react-bootstrap";
 import {
   Filter,
@@ -14,9 +14,24 @@ import {
   Mic,
 } from "react-bootstrap-icons";
 import "../styles/mainApp.css";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const MainApp = () => {
+  const [searchParams] = useSearchParams();
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!localStorage.getItem("accessToken")) navigate("/");
+    if (searchParams.get("accessToken") as string) {
+      localStorage.setItem(
+        "accessToken",
+        searchParams.get("accessToken") as string
+      );
+      navigate("/home");
+    }
+  }, [navigate, searchParams]);
   /* Example for Contacts, getting data from fetch request later */
+
   const contacts = [
     {
       name: "JohnDoe",
