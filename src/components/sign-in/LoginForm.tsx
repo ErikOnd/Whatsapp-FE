@@ -1,10 +1,10 @@
 import React from "react";
 import { Button, Form } from "react-bootstrap";
-// import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAppDispatch } from "../../hooks/hooks";
 import { loginUser } from "../../actions";
+import { toast } from "react-toastify";
 
 const LoginForm = () => {
   const dispatch = useAppDispatch();
@@ -14,7 +14,11 @@ const LoginForm = () => {
 
   const handleSubmit = async (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     e.preventDefault();
-    dispatch(loginUser({ email, password }));
+    if (!email || !password) {
+      toast.error("Please fill in both email and password");
+      return;
+    }
+    await dispatch(loginUser({ email, password })).unwrap();
     navigate("/home");
   };
 
