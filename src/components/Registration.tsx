@@ -1,6 +1,6 @@
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import "../css/reg.css";
-//import GoogleButton from "react-google-button";
+import GoogleButton from "react-google-button";
 import regImage from "../assets/Registration_image.png";
 import { useState } from "react";
 
@@ -24,6 +24,20 @@ const Registration = () => {
     }
   };
 
+  const googleAction = async (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    e.preventDefault();
+    try {
+      let response = await fetch("http://localhost:3001/users/googleLogin");
+
+      if (response.ok) {
+        console.log("google login successful");
+      } else {
+        console.log("Error");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div style={{ backgroundColor: "#D3D3D3" }} className="reg">
       <Container fluid>
@@ -37,10 +51,7 @@ const Registration = () => {
             <div style={{ backgroundColor: "#D3D3D3" }} className="mt-5 ">
               <span className="text-right  acc ">
                 have an account?{" "}
-                <a
-                  href="http://localhost:3000/login"
-                  style={{ color: "green" }}
-                >
+                <a href="http://localhost:3000/" style={{ color: "green" }}>
                   Sign in!
                 </a>
               </span>
@@ -52,7 +63,7 @@ const Registration = () => {
               <p className="text-muted text-center">Getting started is easy</p>
               <div className="d-flex justify-content-center align-items-center ml-auto">
                 {/* <div className=" d-flex " style={{ gap: "10px" }}> */}
-                {/* <GoogleButton type="light" /> */}
+                <GoogleButton type="light" onClick={googleAction} />
                 {/* <Button>Facebook</Button> */}
                 {/* </div> */}
               </div>
