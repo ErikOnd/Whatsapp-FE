@@ -28,22 +28,6 @@ export const postUserAction = (user: {
   };
 };
 
-// ) => {
-//   try {
-//
-//
-
-//     let response = await fetch(
-//       `https://striveschool-api.herokuapp.com/api/profile/${userID}/experiences/${newexpID}/picture`,
-
-//       }
-//     );
-
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
 export const postUserImageAction = (userId: string, file: any) => {
   return async (dispatch: Dispatch) => {
     try {
