@@ -7,10 +7,13 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { postUserAction, postUserImageAction } from "../actions";
 import { useAppDispatch } from "../hooks/hooks";
+import { useNavigate } from "react-router";
+// import { toast } from "react-toastify";
 
 let newUserId: string;
 
 const Registration = () => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [user, setUser] = useState({
     username: "",
@@ -38,6 +41,9 @@ const Registration = () => {
     newUserId = newUser.id._id;
     if (fileForUserPicture) {
       await dispatch(postUserImageAction(newUserId, fileForUserPicture));
+      // toast("User registered. Login to continue! 💪", { autoClose: 1000 });
+      alert("User registered. Login to continue!");
+      navigate("/");
     }
   };
 
@@ -152,14 +158,21 @@ const Registration = () => {
                           />
                         </Form.Group>
                       </Col>
-                      <Form.File
+                      {/* <Form.File
                         id="custom-file-translate-scss"
                         label="choose a picture"
                         lang="en"
                         custom
                         style={{ borderRadius: "20px", marginInline: "15px" }}
                         onChange={uploadUserPicture}
-                      />
+                      />{" "} */}
+                      <Form.Group className="mb-3">
+                        <Form.Control
+                          className="inputs"
+                          type="file"
+                          onChange={uploadUserPicture}
+                        />
+                      </Form.Group>
                     </Row>
 
                     <Button
