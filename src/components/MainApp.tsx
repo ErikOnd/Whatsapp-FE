@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Container, Form, Image } from "react-bootstrap";
+import {
+  Row,
+  Col,
+  Container,
+  Form,
+  Image,
+  Modal,
+  Button,
+} from "react-bootstrap";
 import {
   Filter,
   PeopleFill,
@@ -15,6 +23,7 @@ import {
 } from "react-bootstrap-icons";
 import "../styles/mainApp.css";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { IUser } from "../interfaces/IUser";
 
 const MainApp = () => {
   const [searchParams] = useSearchParams();
@@ -31,11 +40,13 @@ const MainApp = () => {
     }
   }, [navigate, searchParams]);
 
-  const [userData, setUserData] = useState();
+  const [userData, setUserData] = useState<IUser>();
+  console.log("userData:", userData);
 
   const getUser = async () => {
     try {
       const accessToken = localStorage.getItem("accessToken");
+      console.log(accessToken);
       const res = await fetch(`${apiUrl}/users/me`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -50,10 +61,28 @@ const MainApp = () => {
     }
   };
 
+  const editUser = () => {
+    //update name here
+    updateImage();
+  };
+
+  const updateImage = async () => {
+    try {
+      const data = new FormData();
+      data.append("avatar", newImage);
+      await fetch(`${apiUrl}/users/image/${userData?._id}`, {
+        method: "PUT",
+        body: data,
+      });
+    } catch (error) {
+      console.error("An error occurred:", error);
+      throw error;
+    }
+  };
+
   const getContacts = async () => {
     // How are we getting all the contacts from one user ???
   };
-  const editUser = async () => {};
 
   useEffect(() => {
     getUser();
@@ -82,14 +111,23 @@ const MainApp = () => {
     },
   ];
 
+  const [showModal, setShowModal] = useState(false);
+  const [newImage, setNewImage] = useState("");
+  console.log("newImage:", newImage);
+
+  const handleImageClick = () => {
+    setShowModal(true);
+  };
+
   return (
     <Container fluid>
       <Row className="main-header no-wrap">
         <Col className="d-flex align-items-center justify-content-end header-left">
           <Image
-            src="https://servnettech.com/wp-content/uploads/2022/08/c293b66e546446e8a0fa6f258c28b219.jpg"
+            src={userData?.avatar}
             alt="user-img"
             className="mr-4 main-img"
+            onClick={handleImageClick}
           ></Image>
           <PeopleFill
             color="rgb(84 101 111)"
@@ -198,6 +236,34 @@ const MainApp = () => {
           </Col>
         </Col>
       </Row>
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Body>
+          <Row className="justify-content-center">
+            <Image src={userData?.avatar} fluid />
+          </Row>
+
+          <div className="text-center">
+            <div className="my-3">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setNewImage(URL.createObjectURL(file));
+                  }
+                }}
+              />
+            </div>
+            <div className="my-3">
+              <Form.Control type="text" placeholder={userData?.username} />
+            </div>
+            <Button variant="primary" onClick={editUser}>
+              Save Changes
+            </Button>
+          </div>
+        </Modal.Body>
+      </Modal>
     </Container>
   );
 };
