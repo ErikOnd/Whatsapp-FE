@@ -33,11 +33,6 @@ const Registration = () => {
     e.preventDefault();
     let newUser = await dispatch(postUserAction(user));
     console.log(newUser);
-
-    // newexpID = newexp._id;
-    // if (file) {
-    //   NewExpImageUpload(fileForNewExp, newexpID, userID);
-    // }
   };
 
   return (
