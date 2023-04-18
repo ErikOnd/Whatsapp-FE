@@ -25,24 +25,6 @@ const Registration = () => {
     }
   };
 
-  // const googleLoginAction = async (
-  //   e: React.MouseEvent<HTMLElement, MouseEvent>
-  // ) => {
-  //   e.preventDefault();
-  //   try {
-  //     let response = await fetch(
-  //       `${process.env.REACT_APP_BE_URL}/users/googleLogin`
-  //     );
-
-  //     if (response.ok) {
-  //       console.log("google login successful");
-  //     } else {
-  //       console.log("Error");
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
   return (
     <div style={{ backgroundColor: "#D3D3D3" }} className="reg">
       <Container fluid>
