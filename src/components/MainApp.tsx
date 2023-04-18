@@ -39,14 +39,14 @@ const MainApp = () => {
       navigate("/home");
     }
   }, [navigate, searchParams]);
-
+  const [showModal, setShowModal] = useState(false);
+  const [newImage, setNewImage] = useState<File | undefined>(undefined);
   const [userData, setUserData] = useState<IUser>();
-  console.log("userData:", userData);
+  const [newUserName, setNewUserName] = useState({ username: "" });
 
   const getUser = async () => {
     try {
       const accessToken = localStorage.getItem("accessToken");
-      console.log(accessToken);
       const res = await fetch(`${apiUrl}/users/me`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -61,19 +61,38 @@ const MainApp = () => {
     }
   };
 
-  const editUser = () => {
-    //update name here
+  const editUser = async () => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      console.log("JSON.stringify(newUserName):", JSON.stringify(newUserName));
+      const res = await fetch(`${apiUrl}/users/me`, {
+        method: "PUT",
+        body: JSON.stringify(newUserName),
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      const userData = await res.json();
+      if (res.ok) {
+        setUserData(userData);
+      }
+    } catch (error) {
+      console.log(error);
+    }
     updateImage();
   };
 
   const updateImage = async () => {
     try {
       const data = new FormData();
-      data.append("avatar", newImage);
+      if (newImage !== undefined) {
+        data.append("avatar", newImage);
+      }
       await fetch(`${apiUrl}/users/image/${userData?._id}`, {
         method: "PUT",
         body: data,
       });
+      getUser();
     } catch (error) {
       console.error("An error occurred:", error);
       throw error;
@@ -110,10 +129,6 @@ const MainApp = () => {
       email: "BobSmith.de",
     },
   ];
-
-  const [showModal, setShowModal] = useState(false);
-  const [newImage, setNewImage] = useState("");
-  console.log("newImage:", newImage);
 
   const handleImageClick = () => {
     setShowModal(true);
@@ -239,7 +254,7 @@ const MainApp = () => {
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Body>
           <Row className="justify-content-center">
-            <Image src={userData?.avatar} fluid />
+            <Image src={userData?.avatar} fluid className="main-img-big" />
           </Row>
 
           <div className="text-center">
@@ -250,13 +265,19 @@ const MainApp = () => {
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   const file = e.target.files?.[0];
                   if (file) {
-                    setNewImage(URL.createObjectURL(file));
+                    setNewImage(file);
                   }
                 }}
               />
             </div>
             <div className="my-3">
-              <Form.Control type="text" placeholder={userData?.username} />
+              <Form.Control
+                type="text"
+                placeholder={userData?.username}
+                onChange={(e) => {
+                  setNewUserName({ username: e.target.value });
+                }}
+              />
             </div>
             <Button variant="primary" onClick={editUser}>
               Save Changes
