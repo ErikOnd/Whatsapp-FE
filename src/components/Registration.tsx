@@ -4,6 +4,7 @@ import googleBtn from "../images/google-btn.svg";
 import facebookBtn from "../images/facebook-btn.svg";
 import regImage from "../assets/Registration_image.png";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const Registration = () => {
   const [user, setUser] = useState({
@@ -26,50 +27,40 @@ const Registration = () => {
   };
 
   return (
-    <div style={{ backgroundColor: "#D3D3D3" }} className="reg">
+    <div className="reg">
       <Container fluid>
         <Row>
-          <Col xs={12} md={5}>
+          <Col xs={12} md={4} lg={4} className="pl-0">
             <div>
               <img src={regImage} alt="reg" className="regimg" />
             </div>
           </Col>
-          <Col xs={12} md={7}>
-            <div style={{ backgroundColor: "#D3D3D3" }} className="mt-5 ">
-              <span className="text-right  acc ">
-                have an account?{" "}
-                <a href="http://localhost:3000/" style={{ color: "green" }}>
-                  Sign in!
-                </a>
-              </span>
+          <Col xs={12} md={8} lg={8}>
+            <div className="upper-sign-in text-right">
+              <span> have an account?</span>
+              <Link to={`/`} className="signUp-link">
+                {" "}
+                Sign in!
+              </Link>
+            </div>
+            <div className="d-flex flex-column align-items-center justify-content-center bottom-form">
               <div>
-                <h4 className="text-center mt-5 text-bold start">
+                <h2 className="text-center mt-5 text-bold start">
                   Get satrted with WhatsApp
-                </h4>
+                </h2>
               </div>
-              <p className="text-muted text-center">Getting started is easy</p>
-              <div className="d-flex justify-content-center align-items-center ml-auto">
-                <div className="d-flex justify-content-center">
-                  <a
-                    onClick={(e) => e.stopPropagation()}
-                    href={`${process.env.REACT_APP_BE_URL}/users/googleLogin`}
-                  >
-                    {" "}
-                    <img
-                      src={googleBtn}
-                      alt="google button"
-                      className="mr-3 cursor-pointer"
-                    />
-                  </a>
-
-                  <img
-                    src={facebookBtn}
-                    alt="facebook button"
-                    className="cursor-pointer"
-                  />
-                </div>
-                {/* <Button>Facebook</Button> */}
-                {/* </div> */}
+              <p>Getting started is easy</p>
+              <div className="d-flex justify-content-center">
+                <img
+                  src={googleBtn}
+                  alt="google button"
+                  className="mr-3 cursor-pointer"
+                />
+                <img
+                  src={facebookBtn}
+                  alt="facebook button"
+                  className="cursor-pointer"
+                />
               </div>
 
               <div
@@ -81,7 +72,7 @@ const Registration = () => {
                 <div className="left"> </div>
               </div>
 
-              <div className=" register-form">
+              <div className="register-form">
                 <Form>
                   <div className="form-content">
                     <Row>
@@ -145,7 +136,7 @@ const Registration = () => {
                         label="choose a picture"
                         lang="en"
                         custom
-                        style={{ borderRadius: "20px" }}
+                        style={{ borderRadius: "20px", marginInline: "15px" }}
                         onChange={uploadUserPicture}
                       />
                     </Row>

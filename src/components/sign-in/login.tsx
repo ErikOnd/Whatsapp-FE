@@ -4,8 +4,9 @@ import Logo from "../../images/Logo.png";
 import loginImage from "../../images/login-image.png";
 import googleBtn from "../../images/google-btn.svg";
 import facebookBtn from "../../images/facebook-btn.svg";
-import "./login.css";
+import "../../css/reg.css";
 import LoginForm from "./LoginForm";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   return (
@@ -17,14 +18,14 @@ const Login = () => {
               <Image src={Logo} alt="logo" />
               <div className="ml-auto">
                 <span>Don’t have an account?</span>
-                <a href="signup" className="signUp-link">
+                <Link to={`/signup`} className="signUp-link">
                   {" "}
                   Sign Up!
-                </a>
+                </Link>
               </div>
             </div>
             <div className="bottom-block d-flex flex-column justify-content-center text-center">
-              <h2>Welcome Back</h2>
+              <h2 className=" text-bold start">Welcome Back</h2>
               <p>Login into your account</p>
               <div className="d-flex justify-content-center">
                 <img
@@ -38,19 +39,20 @@ const Login = () => {
                   className="cursor-pointer"
                 />
               </div>
-              <hr className="w-100" />
-              <p>Or</p>
+              <div
+                className="d-flex justify-content-center mt-3"
+                style={{ gap: "10px" }}
+              >
+                <div className="left"></div>
+                <div>Or</div>
+                <div className="left"> </div>
+              </div>
               <LoginForm />
             </div>
           </div>
         </Col>
         <Col sm={12} md={4} lg={4} className="pr-0">
-          <img
-            // style={{ height: "100vh", width: "100%", }}
-            src={loginImage}
-            alt="person"
-            className="login-image"
-          />
+          <img src={loginImage} alt="person" className="login-image" />
         </Col>
       </Row>
     </Container>

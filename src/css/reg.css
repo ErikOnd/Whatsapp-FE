@@ -16,14 +16,26 @@ body {
   font-weight: 900;
 }
 .left {
-  border-bottom: 1px solid rgb(100, 94, 94);
+  border-bottom: 1px solid #dbdbdb;
   width: 100px;
   margin-bottom: 10px;
 }
-
+.upper-sign-in {
+  padding-top: 34px;
+  padding-right: 15px;
+  height: 8%;
+}
+.bottom-form {
+  height: 92%;
+  max-width: 650px;
+  margin-inline: auto;
+}
+.register-form {
+  margin-top: 20px;
+}
 .form-content {
-  padding: 5%;
-  border: 1px solid #ced4da;
+  /* padding: 5%; */
+  /* border: 1px solid #ced4da; */
   margin-bottom: 2%;
 }
 .form-control {
@@ -31,10 +43,48 @@ body {
 }
 .btnSubmit {
   border: none;
-  border-radius: 1.5rem;
-  padding: 1%;
-  width: 20%;
+  /* border-radius: 1.5rem; */
+  /* padding: 1%; */
+  width: 100%;
   cursor: pointer;
-  background: green;
+  background: #00a783;
   color: #fff;
+}
+.cursor-pointer {
+  cursor: pointer;
+}
+.cursor-pointer:hover {
+  box-shadow: 1px 4px 8px rgba(0, 0, 0, 0.1);
+}
+.login-page {
+  padding-top: 34px;
+  padding-left: 40px;
+  height: 100vh;
+}
+.login-image {
+  width: 100%;
+  height: 100vh;
+}
+.signUp-link {
+  color: #00a783;
+}
+.upper-logo {
+  height: 8%;
+}
+.bottom-block {
+  height: 92%;
+  text-align: center;
+  max-width: 500px;
+  margin-inline: auto;
+}
+.btn-primary {
+  color: black;
+  background-color: white;
+  border-color: #5a5a5a;
+  transition: all 0.3s linear;
+}
+.btn-primary:hover {
+  color: white;
+  background-color: #00a783;
+  border-color: #00a783;
 }
