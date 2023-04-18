@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 import { postUserAction, postUserImageAction } from "../actions";
 import { useAppDispatch } from "../hooks/hooks";
 import { useNavigate } from "react-router";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 
 let newUserId: string;
 
