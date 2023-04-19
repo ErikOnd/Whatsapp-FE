@@ -137,7 +137,7 @@ const Registration = () => {
                       <Col md={6}>
                         <Form.Group>
                           <Form.Control
-                            type="text"
+                            type="password"
                             placeholder="Your Password *"
                             className="form-control"
                             value={user.password}
@@ -152,7 +152,7 @@ const Registration = () => {
 
                         <Form.Group>
                           <Form.Control
-                            type="text"
+                            type="password"
                             placeholder="Confirm Password *"
                             className="form-control"
                           />
