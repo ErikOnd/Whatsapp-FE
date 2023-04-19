@@ -7,6 +7,7 @@ import {
   Image,
   Modal,
   Button,
+  InputGroup,
 } from "react-bootstrap";
 import {
   Filter,
@@ -98,6 +99,7 @@ const MainApp = () => {
       console.error("An error occurred:", error);
       throw error;
     }
+    setShowModal(false);
   };
 
   const getContacts = async () => {
@@ -272,14 +274,44 @@ const MainApp = () => {
               />
             </div>
             <div className="my-3">
-              <Form.Control
-                type="text"
-                placeholder={userData?.username}
-                onChange={(e) => {
-                  setNewUserName({ username: e.target.value });
-                }}
-              />
+              <InputGroup hasValidation>
+                <InputGroup.Text>Username:</InputGroup.Text>
+                <Form.Control
+                  type="text"
+                  placeholder={userData?.username}
+                  onChange={(e) => {
+                    setNewUserName({ username: e.target.value });
+                  }}
+                />
+              </InputGroup>
             </div>
+            <div className="my-3">
+              <InputGroup className="d-flex flex-column text-left">
+                <span>Status:</span>
+                <Form.Check
+                  inline
+                  type="radio"
+                  name="status"
+                  label="Offline"
+                  value="offline"
+                />
+                <Form.Check
+                  inline
+                  type="radio"
+                  name="status"
+                  label="Online"
+                  value="online"
+                />
+                <Form.Check
+                  inline
+                  type="radio"
+                  name="status"
+                  label="Busy"
+                  value="busy"
+                />
+              </InputGroup>
+            </div>
+
             <Button variant="primary" onClick={editUser}>
               Save Changes
             </Button>

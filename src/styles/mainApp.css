@@ -87,3 +87,8 @@ h6 {
   color: var(--secondary-color);
   font-size: 0.8rem;
 }
+
+.input-group-text {
+  border-bottom-left-radius: 25px;
+  border-top-left-radius: 25px;
+}
