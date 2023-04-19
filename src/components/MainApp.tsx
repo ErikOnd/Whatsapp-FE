@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+// import { useParams } from "react-router-dom";
 import {
   Row,
   Col,
@@ -26,6 +27,9 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { IUser } from "../interfaces/IUser";
 
 const MainApp = () => {
+  // const params = useParams();
+  // console.log("params", params);
+
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const apiUrl = process.env.REACT_APP_BE_URL;

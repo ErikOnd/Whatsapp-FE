@@ -34,7 +34,7 @@ export const postUserImageAction = (userId: string, file: any) => {
   return async (dispatch: Dispatch) => {
     try {
       const formData = new FormData();
-      formData.append("userImg", file);
+      formData.append("avatar", file);
       let response = await fetch(
         `${process.env.REACT_APP_BE_URL}/users/image/${userId}`,
         {
