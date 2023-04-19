@@ -9,6 +9,7 @@ import {
   Modal,
   Button,
   InputGroup,
+  FormControl,
 } from "react-bootstrap";
 import {
   Filter,
@@ -28,6 +29,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { IUser } from "../interfaces/IUser";
 import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import { fetchMyProfileAction } from "../actions";
+import { IUserChats } from "../interfaces/IUserChats";
 
 const MainApp = () => {
   const dispatch = useAppDispatch();
@@ -48,9 +50,11 @@ const MainApp = () => {
   const [newImage, setNewImage] = useState<File | undefined>(undefined);
   const [userData, setUserData] = useState<IUser>();
   const [newUserName, setNewUserName] = useState({ username: "" });
+  const [contactEmail, setContactEmail] = useState("");
+  const [userContacts, setUserContacts] = useState<IUserChats>();
 
   let profile = useAppSelector((state) => state.myProfile.results);
-  console.log("profile", profile);
+
   // setUserData(profile);
 
   // const getUser = async () => {
@@ -111,40 +115,60 @@ const MainApp = () => {
     setShowModal(false);
   };
 
-  const getContacts = async () => {
-    // How are we getting all the contacts from one user ???
-  };
-
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     dispatch(fetchMyProfileAction(accessToken!));
     getContacts();
   }, []);
 
-  const contacts = [
-    {
-      name: "JohnDoe",
-      avatar:
-        "https://servnettech.com/wp-content/uploads/2022/08/c293b66e546446e8a0fa6f258c28b219.jpg",
-      email: "JohnDoe.de",
-    },
-    {
-      name: "JaneDoe",
-      avatar:
-        "https://servnettech.com/wp-content/uploads/2022/08/c293b66e546446e8a0fa6f258c28b219.jpg",
-      email: "JaneDoe.de",
-    },
-
-    {
-      name: "BobSmith",
-      avatar:
-        "https://servnettech.com/wp-content/uploads/2022/08/c293b66e546446e8a0fa6f258c28b219.jpg",
-      email: "BobSmith.de",
-    },
-  ];
-
   const handleImageClick = () => {
     setShowModal(true);
+  };
+
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      createNewChat();
+    }
+  };
+
+  const createNewChat = async () => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      const res = await fetch(`${apiUrl}/chat`, {
+        method: "POST",
+        body: JSON.stringify({
+          participants: [contactEmail, profile._id],
+        }),
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+      await res.json();
+      if (res.ok) {
+        console.log(res);
+        setContactEmail("");
+        getContacts();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getContacts = async () => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      const res = await fetch(`${apiUrl}/chat/me`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      const data = await res.json();
+      setUserContacts(data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -154,7 +178,7 @@ const MainApp = () => {
           <Image
             src={profile?.avatar}
             alt="user-img"
-            className="mr-4 main-img"
+            className="mr-4 main-img-pointer"
             onClick={handleImageClick}
           ></Image>
           <PeopleFill
@@ -210,10 +234,12 @@ const MainApp = () => {
             <Col className="pl-2">
               <Form>
                 <Form.Group controlId="formSearch" className="m-0">
-                  <Form.Control
+                  <FormControl
                     type="text"
-                    placeholder="Search or start a new chat"
-                    className="search-input"
+                    placeholder="Search or create a new chat"
+                    value={contactEmail}
+                    onChange={(e) => setContactEmail(e.target.value)}
+                    onKeyPress={handleKeyPress}
                   />
                 </Form.Group>
               </Form>
@@ -224,20 +250,24 @@ const MainApp = () => {
               className="mr-3"
             ></Filter>
           </Row>
-          {contacts.map((contact) => (
-            <Row className="mb-3" key={contact.email}>
-              <Image src={contact.avatar} className="main-img ml-2"></Image>
-              <Col className="contact-info-section">
-                <Row className="justify-content-between">
-                  <Col>{contact.name}</Col>
-                  <Col className="text-right secondary">Friday</Col>
-                </Row>
-                <Row>
-                  <Col className="secondary">Last Message</Col>
-                </Row>
-              </Col>
-            </Row>
-          ))}
+          {Array.isArray(userContacts) &&
+            userContacts.map((contact) => (
+              <Row className="mb-3" key={contact.participants[0]._id}>
+                <Image
+                  src={contact.participants[0].avatar}
+                  className="main-img ml-2"
+                ></Image>
+                <Col className="contact-info-section">
+                  <Row className="justify-content-between">
+                    <Col>{contact.participants[0].username}</Col>
+                    <Col className="text-right secondary">Friday</Col>
+                  </Row>
+                  <Row>
+                    <Col className="secondary">Last Message</Col>
+                  </Row>
+                </Col>
+              </Row>
+            ))}
         </Col>
         <Col className="chat-col p-0">
           <Col className="chat-window ml-auto d-flex align-items-center justify-content-between">

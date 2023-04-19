@@ -48,6 +48,13 @@
   width: 45px;
   object-fit: cover;
 }
+.main-img-pointer {
+  border-radius: 50%;
+  height: 45px;
+  width: 45px;
+  object-fit: cover;
+  cursor: pointer;
+}
 
 .main-img-big {
   border-radius: 50%;
