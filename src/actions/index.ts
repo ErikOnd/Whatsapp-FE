@@ -2,6 +2,7 @@ import { Dispatch } from "redux";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 export const SET_USER = "SET_USER";
 export const GET_MY_PROFILE = "GET_MY_PROFILE";
+export const GET_ALL_USERS = "GET_ALL_USERS";
 
 export const postUserAction = (user: {
   username: string;
@@ -91,6 +92,29 @@ export const fetchMyProfileAction = (accessToken: string) => {
         dispatch({
           type: GET_MY_PROFILE,
           payload: userData,
+        });
+      } else {
+        console.log("Error");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+export const fetchAllUserssAction = (accessToken: string) => {
+  return async (dispatch: Dispatch) => {
+    try {
+      const res = await fetch(`${process.env.REACT_APP_BE_URL}/users`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      if (res.ok) {
+        let users = await res.json();
+        dispatch({
+          type: GET_ALL_USERS,
+          payload: users,
         });
       } else {
         console.log("Error");

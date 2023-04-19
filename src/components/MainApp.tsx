@@ -28,7 +28,7 @@ import "../styles/mainApp.css";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { IUser } from "../interfaces/IUser";
 import { useAppDispatch, useAppSelector } from "../hooks/hooks";
-import { fetchMyProfileAction } from "../actions";
+import { fetchAllUserssAction, fetchMyProfileAction } from "../actions";
 import { IUserChats } from "../interfaces/IUserChats";
 
 const MainApp = () => {
@@ -56,6 +56,8 @@ const MainApp = () => {
   let profile = useAppSelector((state) => state.myProfile.results);
   let selectedChat = useAppSelector((state) => state.selectChat.selectedChat);
   console.log("selected chat", selectedChat);
+  let allUsers = useAppSelector((state) => state.allUsers.results);
+  console.log("all users", allUsers);
 
   const handleChatItemClick = (chatId: number) => {
     dispatch({ type: "SELECT_CHAT", payload: chatId });
@@ -124,6 +126,7 @@ const MainApp = () => {
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     dispatch(fetchMyProfileAction(accessToken!));
+    dispatch(fetchAllUserssAction(accessToken!));
     getContacts();
   }, []);
 
