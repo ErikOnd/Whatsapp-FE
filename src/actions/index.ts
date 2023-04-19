@@ -1,6 +1,7 @@
 import { Dispatch } from "redux";
-import { createAsyncThunk } from '@reduxjs/toolkit';
-export const SET_USER = 'SET_USER'
+import { createAsyncThunk } from "@reduxjs/toolkit";
+export const SET_USER = "SET_USER";
+export const GET_MY_PROFILE = "GET_MY_PROFILE";
 
 export const postUserAction = (user: {
   username: string;
@@ -34,9 +35,9 @@ export const postUserImageAction = (userId: string, file: any) => {
   return async (dispatch: Dispatch) => {
     try {
       const formData = new FormData();
-      formData.append("userImg", file);
+      formData.append("avatar", file);
       let response = await fetch(
-        `${process.env.REACT_APP_BE_URL}/users/${userId}/image`,
+        `${process.env.REACT_APP_BE_URL}/users/image/${userId}`,
         {
           method: "PUT",
           body: formData,
@@ -57,11 +58,14 @@ export const postUserImageAction = (userId: string, file: any) => {
 export const loginUser = createAsyncThunk(
   "login",
   async ({ email, password }: { email: string; password: string }) => {
-    const response = await fetch(`${process.env.REACT_APP_BE_URL}/users/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+    const response = await fetch(
+      `${process.env.REACT_APP_BE_URL}/users/login`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      }
+    );
     if (!response.ok) {
       const error = await response.text();
       throw new Error(error);
@@ -71,3 +75,28 @@ export const loginUser = createAsyncThunk(
     return data.user;
   }
 );
+
+export const fetchMyProfileAction = (accessToken: string) => {
+  return async (dispatch: Dispatch) => {
+    try {
+      const res = await fetch(`${process.env.REACT_APP_BE_URL}/users/me`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      if (res.ok) {
+        const userData = await res.json();
+        // setUserData(userData);
+        dispatch({
+          type: GET_MY_PROFILE,
+          payload: userData,
+        });
+      } else {
+        console.log("Error");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};

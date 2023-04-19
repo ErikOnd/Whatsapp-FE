@@ -1,7 +1,11 @@
-import { IUser } from "./IUser";
-import { IMessage } from "./IMessage";
-export interface IChat {
-    members: IUser[];
-    messages: IMessage[];
+export interface IMessage {
+    senderId: string;
+    receiverId: string;
+    messageText: string;
+    timestamp: Date;
+}
 
+export interface IChat {
+    participants: string[];
+    messages: IMessage[];
 }
