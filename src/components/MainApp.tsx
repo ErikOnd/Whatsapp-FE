@@ -70,6 +70,7 @@ const MainApp = () => {
         body: JSON.stringify(newUserName),
         headers: {
           Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
         },
       });
       const userData = await res.json();
