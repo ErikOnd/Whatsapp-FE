@@ -99,3 +99,6 @@ h6 {
   border-bottom-left-radius: 25px;
   border-top-left-radius: 25px;
 }
+.chat-item.selected {
+  background-color: greenyellow;
+}

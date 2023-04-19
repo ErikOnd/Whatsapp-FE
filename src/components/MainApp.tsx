@@ -54,6 +54,12 @@ const MainApp = () => {
   const [userContacts, setUserContacts] = useState<IUserChats>();
 
   let profile = useAppSelector((state) => state.myProfile.results);
+  let selectedChat = useAppSelector((state) => state.selectChat.selectedChat);
+  console.log("selected chat", selectedChat);
+
+  const handleChatItemClick = (chatId: number) => {
+    dispatch({ type: "SELECT_CHAT", payload: chatId });
+  };
 
   // setUserData(profile);
 
@@ -171,6 +177,8 @@ const MainApp = () => {
     }
   };
 
+  console.log(userContacts);
+
   return (
     <Container fluid>
       <Row className="main-header no-wrap">
@@ -250,9 +258,16 @@ const MainApp = () => {
               className="mr-3"
             ></Filter>
           </Row>
+
           {Array.isArray(userContacts) &&
             userContacts.map((contact) => (
-              <Row className="mb-3" key={contact.participants[0]._id}>
+              <Row
+                key={contact.participants[0]._id}
+                className={`chat-item mb-3 ${
+                  contact._id === selectedChat ? "selected" : ""
+                }`}
+                onClick={() => handleChatItemClick(contact._id)}
+              >
                 <Image
                   src={contact.participants[0].avatar}
                   className="main-img ml-2"
