@@ -288,7 +288,7 @@ const MainApp = () => {
                 <InputGroup.Text>Username:</InputGroup.Text>
                 <Form.Control
                   type="text"
-                  placeholder={userData?.username}
+                  placeholder={profile?.username}
                   onChange={(e) => {
                     setNewUserName({ username: e.target.value });
                   }}
