@@ -26,7 +26,7 @@ import "../styles/mainApp.css";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { IUser } from "../interfaces/IUser";
 import { useAppDispatch, useAppSelector } from "../hooks/hooks";
-import { fetchMyProfileAction } from "../actions";
+import { fetchAllUsers, fetchMyProfileAction } from "../actions";
 
 const MainApp = () => {
   const dispatch = useAppDispatch();
@@ -47,6 +47,9 @@ const MainApp = () => {
   const [newImage, setNewImage] = useState<File | undefined>(undefined);
   const [userData, setUserData] = useState<IUser>();
   const [newUserName, setNewUserName] = useState({ username: "" });
+  const accessToken = localStorage.getItem("accessToken");
+  const users = useAppSelector((state) => state.users);
+  console.log("users", users);
 
   let profile = useAppSelector((state) => state.myProfile.results);
   console.log("profile", profile);
@@ -111,12 +114,13 @@ const MainApp = () => {
 
   const getContacts = async () => {
     // How are we getting all the contacts from one user ???
+    dispatch(fetchAllUsers(accessToken!));
   };
 
   useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
     dispatch(fetchMyProfileAction(accessToken!));
     getContacts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const contacts = [
@@ -222,12 +226,12 @@ const MainApp = () => {
               className="mr-3"
             ></Filter>
           </Row>
-          {contacts.map((contact) => (
-            <Row className="mb-3" key={contact.email}>
-              <Image src={contact.avatar} className="main-img ml-2"></Image>
+          {(users.results as IUser[]).map((user: IUser) => (
+            <Row className="mb-3" key={user._id}>
+              <Image src={user.avatar} className="main-img ml-2"></Image>
               <Col className="contact-info-section">
                 <Row className="justify-content-between">
-                  <Col>{contact.name}</Col>
+                  <Col>{user.username}</Col>
                   <Col className="text-right secondary">Friday</Col>
                 </Row>
                 <Row>
