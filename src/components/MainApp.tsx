@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-// import { useParams } from "react-router-dom";
+
 import {
   Row,
   Col,
@@ -25,11 +25,11 @@ import {
 import "../styles/mainApp.css";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { IUser } from "../interfaces/IUser";
+import { useAppDispatch, useAppSelector } from "../hooks/hooks";
+import { fetchMyProfileAction } from "../actions";
 
 const MainApp = () => {
-  // const params = useParams();
-  // console.log("params", params);
-
+  const dispatch = useAppDispatch();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const apiUrl = process.env.REACT_APP_BE_URL;
@@ -48,22 +48,26 @@ const MainApp = () => {
   const [userData, setUserData] = useState<IUser>();
   const [newUserName, setNewUserName] = useState({ username: "" });
 
-  const getUser = async () => {
-    try {
-      const accessToken = localStorage.getItem("accessToken");
-      const res = await fetch(`${apiUrl}/users/me`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-      const userData = await res.json();
-      if (res.ok) {
-        setUserData(userData);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  let profile = useAppSelector((state) => state.myProfile.results);
+  console.log("profile", profile);
+  // setUserData(profile);
+
+  // const getUser = async () => {
+  //   try {
+  //     const accessToken = localStorage.getItem("accessToken");
+  //     const res = await fetch(`${apiUrl}/users/me`, {
+  //       headers: {
+  //         Authorization: `Bearer ${accessToken}`,
+  //       },
+  //     });
+  //     const userData = await res.json();
+  //     if (res.ok) {
+  //       setUserData(userData);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   const editUser = async () => {
     try {
@@ -93,11 +97,12 @@ const MainApp = () => {
       if (newImage !== undefined) {
         data.append("avatar", newImage);
       }
-      await fetch(`${apiUrl}/users/image/${userData?._id}`, {
+      await fetch(`${apiUrl}/users/image/${profile?._id}`, {
         method: "PUT",
         body: data,
       });
-      getUser();
+      const accessToken = localStorage.getItem("accessToken");
+      dispatch(fetchMyProfileAction(accessToken!));
     } catch (error) {
       console.error("An error occurred:", error);
       throw error;
@@ -109,7 +114,8 @@ const MainApp = () => {
   };
 
   useEffect(() => {
-    getUser();
+    const accessToken = localStorage.getItem("accessToken");
+    dispatch(fetchMyProfileAction(accessToken!));
     getContacts();
   }, []);
 
@@ -144,7 +150,7 @@ const MainApp = () => {
       <Row className="main-header no-wrap">
         <Col className="d-flex align-items-center justify-content-end header-left">
           <Image
-            src={userData?.avatar}
+            src={profile?.avatar}
             alt="user-img"
             className="mr-4 main-img"
             onClick={handleImageClick}
@@ -259,7 +265,7 @@ const MainApp = () => {
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Body>
           <Row className="justify-content-center">
-            <Image src={userData?.avatar} fluid className="main-img-big" />
+            <Image src={profile?.avatar} fluid className="main-img-big" />
           </Row>
 
           <div className="text-center">
@@ -278,7 +284,7 @@ const MainApp = () => {
             <div className="my-3">
               <Form.Control
                 type="text"
-                placeholder={userData?.username}
+                placeholder={profile?.username}
                 onChange={(e) => {
                   setNewUserName({ username: e.target.value });
                 }}

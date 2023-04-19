@@ -2,9 +2,11 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import { combineReducers } from "@reduxjs/toolkit";
 import { loginUser } from "../../actions";
+import getMyProfileReducer from "../../redeucers/getMyProfileReducer";
 
 const combinedReducers = combineReducers({
-  login: loginUser
+  login: loginUser,
+  myProfile: getMyProfileReducer,
 });
 
 const store = configureStore({
