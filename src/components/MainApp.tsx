@@ -28,14 +28,29 @@ import "../styles/mainApp.css";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { IUser } from "../interfaces/IUser";
 import { useAppDispatch, useAppSelector } from "../hooks/hooks";
-import { fetchMyProfileAction } from "../actions";
+import { createChat, fetchMyProfileAction } from "../actions";
 import { IUserChats } from "../interfaces/IUserChats";
+import { io } from "socket.io-client";
+
+const socket = io("http://localhost:3001", { transports: ["websocket"] });
 
 const MainApp = () => {
   const dispatch = useAppDispatch();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const apiUrl = process.env.REACT_APP_BE_URL;
+  const [showModal, setShowModal] = useState(false);
+  const [newImage, setNewImage] = useState<File | undefined>(undefined);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [userData, setUserData] = useState<IUser>();
+  const [newUserName, setNewUserName] = useState({ username: "" });
+  const [contactEmail, setContactEmail] = useState("");
+  const [userContacts, setUserContacts] = useState<IUserChats>();
+  console.log("userContacts", userContacts);
+
+  let profile = useAppSelector((state) => state.myProfile.results);
+  const accessToken = localStorage.getItem("accessToken");
+
   useEffect(() => {
     if (!localStorage.getItem("accessToken")) navigate("/");
     if (searchParams.get("accessToken") as string) {
@@ -45,34 +60,18 @@ const MainApp = () => {
       );
       navigate("/home");
     }
+    dispatch(fetchMyProfileAction(accessToken!));
+    getContacts();
+    socket.on("welcome", (welcomeMessage) => {
+      console.log(welcomeMessage);
+    });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigate, searchParams]);
-  const [showModal, setShowModal] = useState(false);
-  const [newImage, setNewImage] = useState<File | undefined>(undefined);
-  const [userData, setUserData] = useState<IUser>();
-  const [newUserName, setNewUserName] = useState({ username: "" });
-  const [contactEmail, setContactEmail] = useState("");
-  const [userContacts, setUserContacts] = useState<IUserChats>();
 
-  let profile = useAppSelector((state) => state.myProfile.results);
-
-  // setUserData(profile);
-
-  // const getUser = async () => {
-  //   try {
-  //     const accessToken = localStorage.getItem("accessToken");
-  //     const res = await fetch(`${apiUrl}/users/me`, {
-  //       headers: {
-  //         Authorization: `Bearer ${accessToken}`,
-  //       },
-  //     });
-  //     const userData = await res.json();
-  //     if (res.ok) {
-  //       setUserData(userData);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+  const handleCreateChat = (participants: string[]) => {
+    dispatch(createChat(participants, accessToken!));
+  };
 
   const editUser = async () => {
     try {
@@ -114,12 +113,6 @@ const MainApp = () => {
     }
     setShowModal(false);
   };
-
-  useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
-    dispatch(fetchMyProfileAction(accessToken!));
-    getContacts();
-  }, []);
 
   const handleImageClick = () => {
     setShowModal(true);
@@ -252,7 +245,11 @@ const MainApp = () => {
           </Row>
           {Array.isArray(userContacts) &&
             userContacts.map((contact) => (
-              <Row className="mb-3" key={contact.participants[0]._id}>
+              <Row
+                className="mb-3"
+                style={{ cursor: "pointer" }}
+                key={contact.participants[0]._id}
+              >
                 <Image
                   src={contact.participants[0].avatar}
                   className="main-img ml-2"

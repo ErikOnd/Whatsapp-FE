@@ -3,10 +3,12 @@ import { configureStore } from "@reduxjs/toolkit";
 import { combineReducers } from "@reduxjs/toolkit";
 import { loginUser } from "../../actions";
 import getMyProfileReducer from "../../redeucers/getMyProfileReducer";
+import chatReducer from "../../redeucers/chatReducer";
 
 const combinedReducers = combineReducers({
   login: loginUser,
   myProfile: getMyProfileReducer,
+  selectedChat: chatReducer
 });
 
 const store = configureStore({
