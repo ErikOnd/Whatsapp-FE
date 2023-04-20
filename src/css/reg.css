@@ -91,8 +91,11 @@ body {
 .chat-area {
   display: flex;
   min-height: 81vh;
-  justify-content: end;
+  /* justify-content: end; */
   padding-inline: 30px;
+  margin-top: 60px;
+  padding-bottom: 70px;
+  margin-left: auto;
 }
 .sender-message {
   max-width: 50%;

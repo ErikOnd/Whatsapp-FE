@@ -5,6 +5,10 @@
 .main-header {
   background-color: rgb(240 242 245);
   height: 60px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1;
 }
 
 .header-left {
@@ -18,13 +22,19 @@
   max-width: 30vw;
   min-width: 280px;
   height: calc(100vh - 60px);
+  position: fixed;
+  left: 0;
+  width: 30%;
+  z-index: 1;
+  margin-top: 60px;
 }
 .chat-col {
   background-image: url("/assets/whatsApp.png");
   background-repeat: no-repeat;
   background-size: cover;
   max-width: 70vw;
-  height: calc(100vh - 60px);
+  /* height: calc(100vh - 60px); */
+  margin-left: auto;
 }
 .search-newChat {
   height: 50px;
