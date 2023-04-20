@@ -28,26 +28,34 @@ import "../styles/mainApp.css";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { IUser } from "../interfaces/IUser";
 import { useAppDispatch, useAppSelector } from "../hooks/hooks";
-import { fetchAllUserssAction, fetchMyProfileAction } from "../actions";
+import {
+  fetchAllUserssAction,
+  fetchMyProfileAction,
+  createChat,
+} from "../actions";
+
 import { IUserChats } from "../interfaces/IUserChats";
+import { io } from "socket.io-client";
+
+const socket = io("http://localhost:3001", { transports: ["websocket"] });
 
 const MainApp = () => {
   const dispatch = useAppDispatch();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const apiUrl = process.env.REACT_APP_BE_URL;
-
   const [showModal, setShowModal] = useState(false);
   const [newImage, setNewImage] = useState<File | undefined>(undefined);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [userData, setUserData] = useState<IUser>();
   const [newUserName, setNewUserName] = useState({ username: "" });
   const [contactEmail, setContactEmail] = useState("");
   const [userContacts, setUserContacts] = useState<IUserChats>();
-
+  console.log("userContacts", userContacts);
   let profile = useAppSelector((state) => state.myProfile.results);
   let selectedChat = useAppSelector((state) => state.selectChat.selectedChat);
-
   let allUsers = useAppSelector((state) => state.allUsers.results);
+  const accessToken = localStorage.getItem("accessToken");
 
   useEffect(() => {
     if (!localStorage.getItem("accessToken")) navigate("/");
@@ -58,17 +66,20 @@ const MainApp = () => {
       );
       navigate("/home");
     }
-  }, [navigate, searchParams]);
-
-  useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
     dispatch(fetchMyProfileAction(accessToken!));
     dispatch(fetchAllUserssAction(accessToken!));
     getContacts();
-  }, []);
+    socket.on("welcome", (welcomeMessage) => {
+      console.log(welcomeMessage);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigate, searchParams]);
 
   const handleChatItemClick = (chatId: number) => {
     dispatch({ type: "SELECT_CHAT", payload: chatId });
+  };
+  const handleCreateChat = (participants: string[]) => {
+    dispatch(createChat(participants, accessToken!));
   };
 
   const handleImageClick = () => {
