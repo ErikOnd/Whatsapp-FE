@@ -46,6 +46,7 @@ const MainApp = () => {
 
   let profile = useAppSelector((state) => state.myProfile.results);
   let selectedChat = useAppSelector((state) => state.selectChat.selectedChat);
+
   let allUsers = useAppSelector((state) => state.allUsers.results);
 
   useEffect(() => {
@@ -161,6 +162,11 @@ const MainApp = () => {
     setShowModal(false);
   };
 
+  const chatToShow =
+    userContacts &&
+    Array.isArray(userContacts) &&
+    userContacts.find((c: IUserChats) => c._id === selectedChat);
+
   return (
     <Container fluid>
       <Row className="main-header no-wrap">
@@ -188,35 +194,47 @@ const MainApp = () => {
             className="mr-2"
           ></ChevronDown>
         </Col>
-        <Col className="d-flex align-items-center header-right justify-content-between pl-0">
-          <Col className="pl-0 text-left">
-            <Image
-              src="https://servnettech.com/wp-content/uploads/2022/08/c293b66e546446e8a0fa6f258c28b219.jpg"
-              alt="user-img"
-              className="mr-4  ml-3 align-self-start main-img"
-            ></Image>
-            <h6 className="mb-0">John Doe</h6>
+        {chatToShow ? (
+          <Col className="d-flex align-items-center header-right justify-content-between pl-0">
+            <Col className="pl-0 text-left">
+              <Image
+                src={chatToShow.participants[0].avatar}
+                alt="user-img"
+                className="mr-4  ml-3 align-self-start main-img"
+              ></Image>
+              <h6 className="mb-0">{chatToShow.participants[0].username}</h6>
+            </Col>
+            <Col className="text-right pb-2">
+              <CameraVideo
+                color="rgb(84 101 111)"
+                size={20}
+                className="mr-4"
+              ></CameraVideo>
+              <Telephone
+                color="rgb(84 101 111)"
+                size={20}
+                className="mr-4"
+              ></Telephone>
+              <span className="mr-4 header-seperator">|</span>
+              <Search
+                color="rgb(84 101 111)"
+                size={20}
+                className="mr-4"
+              ></Search>
+              <ChevronDown
+                color="rgb(84 101 111)"
+                size={20}
+                className="mr-2"
+              ></ChevronDown>
+            </Col>
           </Col>
-          <Col className="text-right pb-2">
-            <CameraVideo
-              color="rgb(84 101 111)"
-              size={20}
-              className="mr-4"
-            ></CameraVideo>
-            <Telephone
-              color="rgb(84 101 111)"
-              size={20}
-              className="mr-4"
-            ></Telephone>
-            <span className="mr-4 header-seperator">|</span>
-            <Search color="rgb(84 101 111)" size={20} className="mr-4"></Search>
-            <ChevronDown
-              color="rgb(84 101 111)"
-              size={20}
-              className="mr-2"
-            ></ChevronDown>
+        ) : (
+          <Col className="d-flex align-items-center header-right justify-content-between pl-0">
+            <Col className="pl-0 text-left">
+              <h6 className="mb-0 pl-5">Select a chat to view messages</h6>
+            </Col>
           </Col>
-        </Col>
+        )}
       </Row>
       <Row>
         <Col className="user-col">
