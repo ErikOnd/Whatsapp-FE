@@ -36,6 +36,18 @@ const MainApp = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const apiUrl = process.env.REACT_APP_BE_URL;
+
+  const [showModal, setShowModal] = useState(false);
+  const [newImage, setNewImage] = useState<File | undefined>(undefined);
+  const [userData, setUserData] = useState<IUser>();
+  const [newUserName, setNewUserName] = useState({ username: "" });
+  const [contactEmail, setContactEmail] = useState("");
+  const [userContacts, setUserContacts] = useState<IUserChats>();
+
+  let profile = useAppSelector((state) => state.myProfile.results);
+  let selectedChat = useAppSelector((state) => state.selectChat.selectedChat);
+  let allUsers = useAppSelector((state) => state.allUsers.results);
+
   useEffect(() => {
     if (!localStorage.getItem("accessToken")) navigate("/");
     if (searchParams.get("accessToken") as string) {
@@ -46,82 +58,6 @@ const MainApp = () => {
       navigate("/home");
     }
   }, [navigate, searchParams]);
-  const [showModal, setShowModal] = useState(false);
-  const [newImage, setNewImage] = useState<File | undefined>(undefined);
-  const [userData, setUserData] = useState<IUser>();
-  const [newUserName, setNewUserName] = useState({ username: "" });
-  const [contactEmail, setContactEmail] = useState("");
-  const [userContacts, setUserContacts] = useState<IUserChats>();
-
-  let profile = useAppSelector((state) => state.myProfile.results);
-  let selectedChat = useAppSelector((state) => state.selectChat.selectedChat);
-  console.log("selected chat", selectedChat);
-  let allUsers = useAppSelector((state) => state.allUsers.results);
-  console.log("all users", allUsers);
-
-  const handleChatItemClick = (chatId: number) => {
-    dispatch({ type: "SELECT_CHAT", payload: chatId });
-  };
-
-  // setUserData(profile);
-
-  // const getUser = async () => {
-  //   try {
-  //     const accessToken = localStorage.getItem("accessToken");
-  //     const res = await fetch(`${apiUrl}/users/me`, {
-  //       headers: {
-  //         Authorization: `Bearer ${accessToken}`,
-  //       },
-  //     });
-  //     const userData = await res.json();
-  //     if (res.ok) {
-  //       setUserData(userData);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
-  const editUser = async () => {
-    try {
-      const accessToken = localStorage.getItem("accessToken");
-      console.log("JSON.stringify(newUserName):", JSON.stringify(newUserName));
-      const res = await fetch(`${apiUrl}/users/me`, {
-        method: "PUT",
-        body: JSON.stringify(newUserName),
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-      });
-      const userData = await res.json();
-      if (res.ok) {
-        setUserData(userData);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-    updateImage();
-  };
-
-  const updateImage = async () => {
-    try {
-      const data = new FormData();
-      if (newImage !== undefined) {
-        data.append("avatar", newImage);
-      }
-      await fetch(`${apiUrl}/users/image/${profile?._id}`, {
-        method: "PUT",
-        body: data,
-      });
-      const accessToken = localStorage.getItem("accessToken");
-      dispatch(fetchMyProfileAction(accessToken!));
-    } catch (error) {
-      console.error("An error occurred:", error);
-      throw error;
-    }
-    setShowModal(false);
-  };
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
@@ -129,6 +65,10 @@ const MainApp = () => {
     dispatch(fetchAllUserssAction(accessToken!));
     getContacts();
   }, []);
+
+  const handleChatItemClick = (chatId: number) => {
+    dispatch({ type: "SELECT_CHAT", payload: chatId });
+  };
 
   const handleImageClick = () => {
     setShowModal(true);
@@ -180,7 +120,46 @@ const MainApp = () => {
     }
   };
 
-  console.log(userContacts);
+  const editUser = async () => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      console.log("JSON.stringify(newUserName):", JSON.stringify(newUserName));
+      const res = await fetch(`${apiUrl}/users/me`, {
+        method: "PUT",
+        body: JSON.stringify(newUserName),
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+      const userData = await res.json();
+      if (res.ok) {
+        setUserData(userData);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    updateImage();
+  };
+
+  const updateImage = async () => {
+    try {
+      const data = new FormData();
+      if (newImage !== undefined) {
+        data.append("avatar", newImage);
+      }
+      await fetch(`${apiUrl}/users/image/${profile?._id}`, {
+        method: "PUT",
+        body: data,
+      });
+      const accessToken = localStorage.getItem("accessToken");
+      dispatch(fetchMyProfileAction(accessToken!));
+    } catch (error) {
+      console.error("An error occurred:", error);
+      throw error;
+    }
+    setShowModal(false);
+  };
 
   return (
     <Container fluid>
