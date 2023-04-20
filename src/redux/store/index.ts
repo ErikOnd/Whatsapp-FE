@@ -4,8 +4,11 @@ import { combineReducers } from "@reduxjs/toolkit";
 import { loginUser } from "../../actions";
 import getMyProfileReducer from "../../redeucers/getMyProfileReducer";
 import selectChatReducer from "../../redeucers/selectChatReducer";
+import { getDefaultMiddleware } from "@reduxjs/toolkit";
 import fetchAllUsersReducer from "../../redeucers/getAllUsersReducer";
-
+const customizedMiddleware = getDefaultMiddleware({
+  serializableCheck: false,
+});
 const combinedReducers = combineReducers({
   login: loginUser,
   myProfile: getMyProfileReducer,
@@ -15,6 +18,7 @@ const combinedReducers = combineReducers({
 
 const store = configureStore({
   reducer: combinedReducers,
+  middleware: customizedMiddleware,
 });
 
 export type RootState = ReturnType<typeof store.getState>;
