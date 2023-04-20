@@ -6,7 +6,6 @@ export const GET_ALL_USERS = "GET_ALL_USERS";
 export const CREATE_CHAT_SUCCESS = "CREATE_CHAT_SUCCESS";
 export const CREATE_CHAT_FAIL = "CREATE_CHAT_FAIL";
 
-
 export const postUserAction = (user: {
   username: string;
   email: string;
@@ -128,23 +127,61 @@ export const fetchAllUserssAction = (accessToken: string) => {
     }
   };
 };
-export const createChat = (participants: string[], accessToken: string) => async (dispatch: Dispatch) => {
-  try {
-    const response = await fetch('/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}`, },
-      body: JSON.stringify({ participants }),
-    });
-    const data = await response.json();
-    console.log("chatdata", data)
-    dispatch({
-      type: CREATE_CHAT_SUCCESS,
-      payload: data.message,
-    });
-  } catch (error) {
-    dispatch({
-      type: CREATE_CHAT_FAIL,
-      payload: (error as Error).message,
-    });
-  }
+export const createChat =
+  (participants: string[], accessToken: string) =>
+  async (dispatch: Dispatch) => {
+    try {
+      const response = await fetch("/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ participants }),
+      });
+      const data = await response.json();
+      console.log("chatdata", data);
+      dispatch({
+        type: CREATE_CHAT_SUCCESS,
+        payload: data.message,
+      });
+    } catch (error) {
+      dispatch({
+        type: CREATE_CHAT_FAIL,
+        payload: (error as Error).message,
+      });
+    }
+  };
+
+export const PostMessageAction = (
+  msg: { messageText: string; receiverId: string; senderId: string },
+  chatId: string,
+  accessToken: string
+) => {
+  return async (dispatch: Dispatch) => {
+    try {
+      console.log(msg);
+      let response = await fetch(
+        `${process.env.REACT_APP_BE_URL}/chat/${chatId}`,
+        {
+          method: "POST",
+          body: JSON.stringify(msg),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken} `,
+          },
+        }
+      );
+
+      if (response.ok) {
+        console.log("posted");
+        let data = response.json();
+        return data;
+      } else {
+        console.log("Error");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 };

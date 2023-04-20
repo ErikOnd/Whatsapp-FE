@@ -23,6 +23,7 @@ import {
   EmojiSmile,
   Paperclip,
   Mic,
+  ArrowRight,
 } from "react-bootstrap-icons";
 import "../styles/mainApp.css";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -32,13 +33,15 @@ import {
   fetchAllUserssAction,
   fetchMyProfileAction,
   createChat,
+  PostMessageAction,
 } from "../actions";
 
 import { IUserChats } from "../interfaces/IUserChats";
 import { io } from "socket.io-client";
+import { IChat } from "../interfaces/IChat";
 
 const socket = io("http://localhost:3001", { transports: ["websocket"] });
-
+let chatToShow: IChat;
 const MainApp = () => {
   const dispatch = useAppDispatch();
   const [searchParams] = useSearchParams();
@@ -51,6 +54,12 @@ const MainApp = () => {
   const [newUserName, setNewUserName] = useState({ username: "" });
   const [contactEmail, setContactEmail] = useState("");
   const [userContacts, setUserContacts] = useState<IUserChats>();
+  const [msg, setMsg] = useState({
+    messageText: "",
+    receiverId: "",
+    senderId: "",
+  });
+
   console.log("userContacts", userContacts);
   let profile = useAppSelector((state) => state.myProfile.results);
   let selectedChat = useAppSelector((state) => state.selectChat.selectedChat);
@@ -173,11 +182,17 @@ const MainApp = () => {
     setShowModal(false);
   };
 
-  const chatToShow =
+  chatToShow =
     userContacts &&
     Array.isArray(userContacts) &&
     userContacts.find((c: IUserChats) => c._id === selectedChat);
+  console.log(chatToShow);
 
+  const handleSubmit = async (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    e.preventDefault();
+
+    await dispatch(PostMessageAction(msg, chatToShow._id, accessToken!));
+  };
   return (
     <Container fluid>
       <Row className="main-header no-wrap">
@@ -307,14 +322,35 @@ const MainApp = () => {
               size={25}
               className="mr-3 ml-2"
             ></Paperclip>
-            <Form className="w-100">
-              <Form.Group controlId="formSearch" className="m-0">
-                <Form.Control
-                  type="text"
-                  placeholder="Write a message"
-                  className="text-input w-100"
-                />
-              </Form.Group>
+            <Form className="w-100 ">
+              <Row className="no-gutter">
+                <Col xs={11}>
+                  <Form.Group controlId="formSearch" className="m-0">
+                    <Form.Control
+                      type="text"
+                      placeholder="Write a message"
+                      className="text-input w-100"
+                      onChange={(e) => {
+                        setMsg({
+                          ...msg,
+                          receiverId: chatToShow?.participants[0]._id,
+                          senderId: profile._id,
+                          messageText: e.target.value,
+                        });
+                      }}
+                    />
+                  </Form.Group>
+                </Col>
+                <Col xs={1}>
+                  <Button
+                    className="whatsapp-send-button"
+                    onClick={handleSubmit}
+                  >
+                    {" "}
+                    <ArrowRight />{" "}
+                  </Button>
+                </Col>
+              </Row>
             </Form>
             <Mic color="rgb(84 101 111)" size={25} className="mr-2 ml-3"></Mic>
           </Col>

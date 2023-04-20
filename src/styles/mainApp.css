@@ -107,3 +107,17 @@ h6 {
 .chat-item.selected {
   background-color: rgb(240 242 245);
 }
+
+.whatsapp-send-button {
+  background-color: #25d366;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  padding: 10px 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.whatsapp-send-button:hover {
+  background-color: #128c7e;
+}
