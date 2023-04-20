@@ -378,49 +378,6 @@ const MainApp = () => {
         <Col className="chat-col p-0">
           {/* MIDDLE AREA: CHAT HISTORY */}
           <ListGroup className="chat-area">{renderMessages()}</ListGroup>
-          {/* <ListGroup className="chat-area">
-            {chatToShow &&
-              chatToShow.messages.map(
-                (message: {
-                  messageText: string;
-                  receiverId: string;
-                  senderId: string;
-                  timestamp: string;
-                  _id: string;
-                }) => {
-                  const messageDate = new Date(message.timestamp);
-                  const today = new Date();
-                  const yesterday = new Date(today);
-                  yesterday.setDate(yesterday.getDate() - 1);
-
-                  let dateDisplay;
-                  if (messageDate.toDateString() === today.toDateString()) {
-                    dateDisplay = "Today";
-                  } else if (
-                    messageDate.toDateString() === yesterday.toDateString()
-                  ) {
-                    dateDisplay = "Yesterday";
-                  } else {
-                    dateDisplay = messageDate.toLocaleDateString();
-                  }
-                  return (
-                    <>
-                      <ListGroup.Item
-                        key={message._id}
-                        className={
-                          message.senderId === profile._id
-                            ? "sender-message"
-                            : "receiver-message"
-                        }
-                      >
-                        {message.messageText}
-                        <small className="text-muted"> at {dateDisplay}</small>
-                      </ListGroup.Item>
-                    </>
-                  );
-                }
-              )}
-          </ListGroup> */}
           <Col className="chat-window ml-auto d-flex align-items-center justify-content-between">
             <EmojiSmile
               color="rgb(84 101 111)"
