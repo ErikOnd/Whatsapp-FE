@@ -241,7 +241,7 @@ const MainApp = () => {
       </Row>
       <Row>
         <Col className="user-col">
-          <Row className="search-newChat align-items-center justify-content-between mb-2">
+          <Row className="search-newChat align-items-center justify-content-between">
             <Col className="pl-2">
               <Form>
                 <Form.Group controlId="formSearch" className="m-0">
@@ -266,7 +266,7 @@ const MainApp = () => {
             userContacts.map((contact) => (
               <Row
                 key={contact.participants[0]._id}
-                className={`chat-item mb-3 ${
+                className={`chat-item ${
                   contact._id === selectedChat ? "selected" : ""
                 }`}
                 onClick={() => handleChatItemClick(contact._id)}
