@@ -88,3 +88,37 @@ body {
   background-color: #00a783;
   border-color: #00a783;
 }
+.chat-area {
+  display: flex;
+  min-height: 81vh;
+  justify-content: end;
+  padding-inline: 30px;
+}
+.sender-message {
+  max-width: 50%;
+  background-color: #d9fdd3 !important;
+  border-radius: 10px;
+  padding: 8px;
+  margin-left: auto;
+  margin-bottom: 10px;
+}
+
+.receiver-message {
+  max-width: 50%;
+  background-color: white !important;
+  border-radius: 10px;
+  padding: 8px;
+  margin-bottom: 10px;
+  margin-right: auto;
+}
+.time-item {
+  background-color: transparent !important;
+}
+.time-span {
+  width: 100%;
+  font-size: 12px;
+  text-align: right;
+}
+.msg-font {
+  font-size: 14px;
+}

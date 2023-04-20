@@ -10,6 +10,7 @@ import {
   Button,
   InputGroup,
   FormControl,
+  ListGroup,
 } from "react-bootstrap";
 import {
   Filter,
@@ -32,13 +33,12 @@ import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import {
   fetchAllUserssAction,
   fetchMyProfileAction,
-  createChat,
   PostMessageAction,
 } from "../actions";
 
 import { IUserChats } from "../interfaces/IUserChats";
 import { io } from "socket.io-client";
-import { IChat } from "../interfaces/IChat";
+import { IChat, IMessage } from "../interfaces/IChat";
 
 const socket = io("http://localhost:3001", { transports: ["websocket"] });
 let chatToShow: IChat;
@@ -62,6 +62,7 @@ const MainApp = () => {
 
   console.log("userContacts", userContacts);
   let profile = useAppSelector((state) => state.myProfile.results);
+  console.log("profile", profile);
   let selectedChat = useAppSelector((state) => state.selectChat.selectedChat);
   let allUsers = useAppSelector((state) => state.allUsers.results);
   const accessToken = sessionStorage.getItem("accessToken");
@@ -76,6 +77,11 @@ const MainApp = () => {
 
       navigate("/home");
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigate, searchParams]);
+
+  useEffect(() => {
     dispatch(fetchMyProfileAction(accessToken!));
     dispatch(fetchAllUserssAction(accessToken!));
     getContacts();
@@ -84,13 +90,10 @@ const MainApp = () => {
     });
     console.log();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [navigate, searchParams]);
+  }, []);
 
   const handleChatItemClick = (chatId: number) => {
     dispatch({ type: "SELECT_CHAT", payload: chatId });
-  };
-  const handleCreateChat = (participants: string[]) => {
-    dispatch(createChat(participants, accessToken!));
   };
 
   const handleImageClick = () => {
@@ -195,6 +198,66 @@ const MainApp = () => {
 
     await dispatch(PostMessageAction(msg, chatToShow._id, accessToken!));
   };
+
+  console.log("chatToShow", chatToShow);
+
+  const renderMessages = () => {
+    let prevDate: any | null = null;
+    return (
+      chatToShow &&
+      chatToShow.messages.map((message: IMessage) => {
+        let currentDate = new Date(message.timestamp).toLocaleDateString();
+        let messageTime = new Date(message.timestamp).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+        let date = null;
+
+        const messageDate = new Date(message.timestamp);
+        const today = new Date();
+        const yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+
+        let dateDisplay;
+        if (messageDate.toDateString() === today.toDateString()) {
+          dateDisplay = "Today";
+        } else if (messageDate.toDateString() === yesterday.toDateString()) {
+          dateDisplay = "Yesterday";
+        } else {
+          dateDisplay = messageDate.toLocaleDateString();
+        }
+
+        if (currentDate !== prevDate) {
+          date = (
+            <ListGroup.Item
+              className="text-center text-muted border-0 time-item"
+              key={message._id}
+            >
+              {dateDisplay}
+            </ListGroup.Item>
+          );
+          prevDate = currentDate;
+        }
+
+        return (
+          <React.Fragment key={message._id}>
+            {date}
+            <ListGroup.Item
+              className={
+                message.senderId === profile._id
+                  ? "sender-message"
+                  : "receiver-message"
+              }
+            >
+              <p className="mb-1 msg-font">{message.messageText}</p>
+              <p className="text-muted time-span mb-0">{messageTime}</p>
+            </ListGroup.Item>
+          </React.Fragment>
+        );
+      })
+    );
+  };
+
   return (
     <Container fluid>
       <Row className="main-header no-wrap">
@@ -313,6 +376,51 @@ const MainApp = () => {
             ))}
         </Col>
         <Col className="chat-col p-0">
+          {/* MIDDLE AREA: CHAT HISTORY */}
+          <ListGroup className="chat-area">{renderMessages()}</ListGroup>
+          {/* <ListGroup className="chat-area">
+            {chatToShow &&
+              chatToShow.messages.map(
+                (message: {
+                  messageText: string;
+                  receiverId: string;
+                  senderId: string;
+                  timestamp: string;
+                  _id: string;
+                }) => {
+                  const messageDate = new Date(message.timestamp);
+                  const today = new Date();
+                  const yesterday = new Date(today);
+                  yesterday.setDate(yesterday.getDate() - 1);
+
+                  let dateDisplay;
+                  if (messageDate.toDateString() === today.toDateString()) {
+                    dateDisplay = "Today";
+                  } else if (
+                    messageDate.toDateString() === yesterday.toDateString()
+                  ) {
+                    dateDisplay = "Yesterday";
+                  } else {
+                    dateDisplay = messageDate.toLocaleDateString();
+                  }
+                  return (
+                    <>
+                      <ListGroup.Item
+                        key={message._id}
+                        className={
+                          message.senderId === profile._id
+                            ? "sender-message"
+                            : "receiver-message"
+                        }
+                      >
+                        {message.messageText}
+                        <small className="text-muted"> at {dateDisplay}</small>
+                      </ListGroup.Item>
+                    </>
+                  );
+                }
+              )}
+          </ListGroup> */}
           <Col className="chat-window ml-auto d-flex align-items-center justify-content-between">
             <EmojiSmile
               color="rgb(84 101 111)"
