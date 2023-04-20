@@ -328,6 +328,7 @@ const MainApp = () => {
                   <Form.Group controlId="formSearch" className="m-0">
                     <Form.Control
                       type="text"
+                      disabled={!chatToShow}
                       placeholder="Write a message"
                       className="text-input w-100"
                       onChange={(e) => {
