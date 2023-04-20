@@ -55,15 +55,16 @@ const MainApp = () => {
   let profile = useAppSelector((state) => state.myProfile.results);
   let selectedChat = useAppSelector((state) => state.selectChat.selectedChat);
   let allUsers = useAppSelector((state) => state.allUsers.results);
-  const accessToken = localStorage.getItem("accessToken");
+  const accessToken = sessionStorage.getItem("accessToken");
 
   useEffect(() => {
-    if (!localStorage.getItem("accessToken")) navigate("/");
+    if (!sessionStorage.getItem("accessToken")) navigate("/");
     if (searchParams.get("accessToken") as string) {
-      localStorage.setItem(
+      sessionStorage.setItem(
         "accessToken",
         searchParams.get("accessToken") as string
       );
+
       navigate("/home");
     }
     dispatch(fetchMyProfileAction(accessToken!));
@@ -72,6 +73,7 @@ const MainApp = () => {
     socket.on("welcome", (welcomeMessage) => {
       console.log(welcomeMessage);
     });
+    console.log();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigate, searchParams]);
 
@@ -95,7 +97,7 @@ const MainApp = () => {
 
   const createNewChat = async () => {
     try {
-      const accessToken = localStorage.getItem("accessToken");
+      const accessToken = sessionStorage.getItem("accessToken");
       const res = await fetch(`${apiUrl}/chat`, {
         method: "POST",
         body: JSON.stringify({
@@ -119,7 +121,7 @@ const MainApp = () => {
 
   const getContacts = async () => {
     try {
-      const accessToken = localStorage.getItem("accessToken");
+      const accessToken = sessionStorage.getItem("accessToken");
       const res = await fetch(`${apiUrl}/chat/me`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -134,7 +136,7 @@ const MainApp = () => {
 
   const editUser = async () => {
     try {
-      const accessToken = localStorage.getItem("accessToken");
+      const accessToken = sessionStorage.getItem("accessToken");
       console.log("JSON.stringify(newUserName):", JSON.stringify(newUserName));
       const res = await fetch(`${apiUrl}/users/me`, {
         method: "PUT",
@@ -164,7 +166,7 @@ const MainApp = () => {
         method: "PUT",
         body: data,
       });
-      const accessToken = localStorage.getItem("accessToken");
+      const accessToken = sessionStorage.getItem("accessToken");
       dispatch(fetchMyProfileAction(accessToken!));
     } catch (error) {
       console.error("An error occurred:", error);
