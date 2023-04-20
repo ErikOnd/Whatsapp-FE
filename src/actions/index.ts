@@ -152,3 +152,36 @@ export const createChat =
       });
     }
   };
+
+export const PostMessageAction = (
+  msg: { messageText: string; receiverId: string; senderId: string },
+  chatId: string,
+  accessToken: string
+) => {
+  return async (dispatch: Dispatch) => {
+    try {
+      console.log(msg);
+      let response = await fetch(
+        `${process.env.REACT_APP_BE_URL}/chat/${chatId}`,
+        {
+          method: "POST",
+          body: JSON.stringify(msg),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken} `,
+          },
+        }
+      );
+
+      if (response.ok) {
+        console.log("posted");
+        let data = response.json();
+        return data;
+      } else {
+        console.log("Error");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
