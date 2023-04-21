@@ -11,7 +11,7 @@ interface Participant {
   avatar: string;
 }
 
-interface Message {
+export interface Message {
   senderId: string;
   receiverId: string;
   messageText: string;

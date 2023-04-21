@@ -90,8 +90,8 @@ body {
 }
 .chat-area {
   display: flex;
-  /* min-height: 81vh; */
-  height: calc(100vh - 70px);
+  /* height: 100vh; */
+  /* height: calc(100vh - 70px); */
   /* justify-content: end; */
   padding-inline: 30px;
   margin-top: 60px;

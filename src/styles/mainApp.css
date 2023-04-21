@@ -4,7 +4,7 @@
 
 .main-header {
   background-color: rgb(240 242 245);
-  height: 60px;
+  height: 10%;
   position: fixed;
   top: 0;
   width: 100%;
@@ -34,6 +34,7 @@
   background-size: cover;
   max-width: 70vw;
   /* height: calc(100vh - 60px); */
+  height: 100%;
   margin-left: auto;
 }
 .search-newChat {

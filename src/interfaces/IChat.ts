@@ -3,8 +3,8 @@ export interface IMessage {
     senderId: string;
     receiverId: string;
     messageText: string;
-    timestamp: Date;
-    _id: string
+    timestamp?: Date;
+    _id?: string
 }
 
 export interface IChat {

@@ -7,6 +7,7 @@ import selectChatReducer from "../../redeucers/selectChatReducer";
 import { getDefaultMiddleware } from "@reduxjs/toolkit";
 import fetchAllUsersReducer from "../../redeucers/getAllUsersReducer";
 import chatReducer from "../../redeucers/chatReducer";
+import postMessageReducer from "../../redeucers/postMessagereducer";
 
 const customizedMiddleware = getDefaultMiddleware({
   serializableCheck: false,
@@ -17,6 +18,7 @@ const combinedReducers = combineReducers({
   selectChat: selectChatReducer,
   allUsers: fetchAllUsersReducer,
   selectedChat: chatReducer,
+  chat: postMessageReducer
 });
 
 const store = configureStore({

@@ -33,6 +33,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { IUser } from "../interfaces/IUser";
 import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import {
+  createChat,
   fetchAllUserssAction,
   fetchMyProfileAction,
   PostMessageAction,
@@ -55,6 +56,7 @@ const MainApp = () => {
   const [userData, setUserData] = useState<IUser>();
   const [newUserName, setNewUserName] = useState({ username: "" });
   const [contactEmail, setContactEmail] = useState("");
+  console.log("contactEmail", contactEmail);
   const [userContacts, setUserContacts] = useState<IUserChats>();
   const [msg, setMsg] = useState({
     messageText: "",
@@ -66,8 +68,19 @@ const MainApp = () => {
   let profile = useAppSelector((state) => state.myProfile.results);
   console.log("profile", profile);
   let selectedChat = useAppSelector((state) => state.selectChat.selectedChat);
+  console.log("selectedChat", selectedChat);
+
+  let chatMsg = useAppSelector((state) => state.chat.messages);
+  console.log("chatMsg", chatMsg);
+  const [chatHistory, setChatHistory] = useState<IMessage[]>([]);
+  const [currentRoom, setCurrentRoom] = useState("");
   let allUsers = useAppSelector((state) => state.allUsers.results);
   const accessToken = sessionStorage.getItem("accessToken");
+  chatToShow =
+    userContacts &&
+    Array.isArray(userContacts) &&
+    userContacts.find((c: IUserChats) => c._id === selectedChat);
+  console.log(chatToShow);
 
   useEffect(() => {
     if (!sessionStorage.getItem("accessToken")) navigate("/");
@@ -89,17 +102,46 @@ const MainApp = () => {
     // Navigate to login page
     navigate("/");
   };
+  const username = profile.username;
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     dispatch(fetchMyProfileAction(accessToken!));
+  //     dispatch(fetchAllUserssAction(accessToken!));
+  //     getContacts();
+  //   }, 12000);
 
+  //   return () => clearInterval(interval);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
   useEffect(() => {
     dispatch(fetchMyProfileAction(accessToken!));
     dispatch(fetchAllUserssAction(accessToken!));
     getContacts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => {
     socket.on("welcome", (welcomeMessage) => {
       console.log(welcomeMessage);
     });
-    console.log();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    socket.emit("user-connected", { username });
+    console.log("user-connected");
+
+    socket.on("joined-room", (msg) => {
+      setMsg(msg);
+      dispatch(PostMessageAction(msg, chatToShow._id, accessToken!));
+    });
+    // socket.on("incoming-msg", (msg) => {
+    //   console.log("newMwssage", msg);
+    //   // setMsg((chatHistory) => [...chatHistory,msg]);
+    // });
+    // socket.on("updateOnlineUsersList", (users) => {
+    //   setUserContacts(users);
+    // });
+    return () => {
+      socket.disconnect();
+      console.log("Socket disconnected");
+    };
+  }, [msg]);
 
   const handleChatItemClick = (chatId: number) => {
     dispatch({ type: "SELECT_CHAT", payload: chatId });
@@ -196,16 +238,19 @@ const MainApp = () => {
     setShowModal(false);
   };
 
-  chatToShow =
-    userContacts &&
-    Array.isArray(userContacts) &&
-    userContacts.find((c: IUserChats) => c._id === selectedChat);
-  console.log(chatToShow);
-
   const handleSubmit = async (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     e.preventDefault();
-
     await dispatch(PostMessageAction(msg, chatToShow._id, accessToken!));
+    // setMsg({
+    //   messageText: "",
+    //   receiverId: "",
+    //   senderId: "",
+    // });
+    socket.emit("outgoing-msg", {
+      sender: socket.id,
+      room: currentRoom,
+      text: msg,
+    });
   };
 
   console.log("chatToShow", chatToShow);
@@ -215,14 +260,14 @@ const MainApp = () => {
     return (
       chatToShow &&
       chatToShow.messages.map((message: IMessage) => {
-        let currentDate = new Date(message.timestamp).toLocaleDateString();
-        let messageTime = new Date(message.timestamp).toLocaleTimeString([], {
+        let currentDate = new Date(message.timestamp!).toLocaleDateString();
+        let messageTime = new Date(message.timestamp!).toLocaleTimeString([], {
           hour: "2-digit",
           minute: "2-digit",
         });
         let date = null;
 
-        const messageDate = new Date(message.timestamp);
+        const messageDate = new Date(message.timestamp!);
         const today = new Date();
         const yesterday = new Date(today);
         yesterday.setDate(yesterday.getDate() - 1);

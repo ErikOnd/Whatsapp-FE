@@ -5,6 +5,8 @@ export const GET_MY_PROFILE = "GET_MY_PROFILE";
 export const GET_ALL_USERS = "GET_ALL_USERS";
 export const CREATE_CHAT_SUCCESS = "CREATE_CHAT_SUCCESS";
 export const CREATE_CHAT_FAIL = "CREATE_CHAT_FAIL";
+export const ADD_MESSAGE = "ADD_MESSAGE";
+
 
 export const postUserAction = (user: {
   username: string;
@@ -129,29 +131,29 @@ export const fetchAllUserssAction = (accessToken: string) => {
 };
 export const createChat =
   (participants: string[], accessToken: string) =>
-  async (dispatch: Dispatch) => {
-    try {
-      const response = await fetch("/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({ participants }),
-      });
-      const data = await response.json();
-      console.log("chatdata", data);
-      dispatch({
-        type: CREATE_CHAT_SUCCESS,
-        payload: data.message,
-      });
-    } catch (error) {
-      dispatch({
-        type: CREATE_CHAT_FAIL,
-        payload: (error as Error).message,
-      });
-    }
-  };
+    async (dispatch: Dispatch) => {
+      try {
+        const response = await fetch("/chat", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({ participants }),
+        });
+        const data = await response.json();
+        console.log("chatdata", data);
+        dispatch({
+          type: CREATE_CHAT_SUCCESS,
+          payload: data.message,
+        });
+      } catch (error) {
+        dispatch({
+          type: CREATE_CHAT_FAIL,
+          payload: (error as Error).message,
+        });
+      }
+    };
 
 export const PostMessageAction = (
   msg: { messageText: string; receiverId: string; senderId: string },
@@ -175,7 +177,16 @@ export const PostMessageAction = (
 
       if (response.ok) {
         console.log("posted");
-        let data = response.json();
+        let data = await response.json();
+        console.log("msgData", data)
+        dispatch({
+          type: ADD_MESSAGE,
+          payload: {
+            senderId: msg.senderId,
+            receiverId: msg.receiverId,
+            messageText: msg.messageText,
+          },
+        });
         return data;
       } else {
         console.log("Error");

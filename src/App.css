@@ -1,11 +1,14 @@
 .App {
-  height: 100vh;
+  height: 100% !important;
 }
 body {
-  height: 100vh;
+  height: 100% !important;
   -ms-overflow-style: none;
   scrollbar-width: none;
   overflow-y: scroll;
+  /* background-image: url("/assets/whatsApp.png");
+  background-repeat: no-repeat;
+  background-size: cover; */
 }
 body::-webkit-scrollbar {
   display: none;
