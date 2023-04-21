@@ -11,6 +11,8 @@ import {
   InputGroup,
   FormControl,
   ListGroup,
+  DropdownButton,
+  Dropdown,
 } from "react-bootstrap";
 import {
   Filter,
@@ -80,6 +82,13 @@ const MainApp = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigate, searchParams]);
+
+  const handleLogout = () => {
+    // Remove user data from session storage
+    sessionStorage.removeItem("accessToken");
+    // Navigate to login page
+    navigate("/");
+  };
 
   useEffect(() => {
     dispatch(fetchMyProfileAction(accessToken!));
@@ -279,11 +288,15 @@ const MainApp = () => {
             size={20}
             className="mr-4"
           ></PencilSquare>
-          <ChevronDown
-            color="rgb(84 101 111)"
-            size={20}
-            className="mr-2"
-          ></ChevronDown>
+          <Dropdown className="btn-group">
+            <Dropdown.Toggle className="dropdown-btn" id="dropdown-basic">
+              <ChevronDown color="rgb(84 101 111)" size={20} className="mr-2" />
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu className="dropdown-menu ">
+              <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
         </Col>
         {chatToShow ? (
           <Col className="d-flex align-items-center header-right justify-content-between pl-0">

@@ -25,7 +25,7 @@
   position: fixed;
   left: 0;
   width: 30%;
-  z-index: 1;
+  /* z-index: 1; */
   margin-top: 60px;
 }
 .chat-col {
@@ -132,4 +132,20 @@ h6 {
 
 .whatsapp-send-button:hover {
   background-color: #128c7e;
+}
+.show > .btn-primary.dropdown-toggle:focus,
+.btn-primary:focus {
+  box-shadow: none;
+  border-color: transparent;
+}
+.btn-group,
+.dropdown-menu {
+  z-index: 2 !important;
+}
+.dropdown-btn {
+  background-color: transparent !important;
+  border: 0px;
+}
+.dropdown-toggle::after {
+  display: none;
 }
